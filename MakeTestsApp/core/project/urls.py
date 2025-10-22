@@ -1,11 +1,11 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
-from MakeTestsApp.core.project import settings
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
-    path('', include('tests.urls', namespace='tests')),
-    path('', include('users.urls')),
+    path('', include('core.apps.tests.urls', namespace='tests')),
+    path('', include('core.apps.users.urls', namespace='users')),
 ]
 
 if settings.DEBUG and getattr(settings, "DEBUG_TOOLBAR", False):

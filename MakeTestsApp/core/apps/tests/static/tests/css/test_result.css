@@ -1,0 +1,117 @@
+{% load static %}
+
+.test-result{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 2%;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.test-result__block{
+    width: 40vw;
+    min-width: 600px;
+    height: 60%;
+    background: #f6f6ff;
+    border-radius: 20px;
+    box-shadow: 7px 6px 3px 1px #d5d5ff;
+    border-top: 2px solid #e6e6e7;
+    border-left: 2px solid #e6e6e7;
+    display: flex;
+    flex-direction: column;
+    padding: 3%;
+}
+
+.test-result__review-answers{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.test-result__block-title{
+    text-align: center;
+    margin-bottom: 5%;
+
+}
+
+.test-result__suggested-tests-header{
+    margin-bottom: 20px;
+}
+
+.test-result__suggested-tests{
+    background: #f6f6ff;
+    width: 40vw;
+    min-width: 600px;
+    height: 40%;
+    padding: 20px;
+    text-align: center;
+    border-radius: 25px;
+    box-shadow: 7px 6px 3px 1px #d5d5ff;
+    border-top: 1px solid #e6e6e7;
+    border-left: 1px solid #e6e6e7;
+    display: flex;
+    flex-direction: column;
+}
+
+.test-result__suggested-tests-list{
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.test-result__suggested-test-block{
+    height: 100%;
+    background: #ededff;
+    border-radius: 1rem;
+    padding: 10px;
+    filter: drop-shadow(0 0 3px #d5d5ff);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 1px 1px 3px 1px #d5d5ff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.test-result__suggested-test-tag-span{
+    font-size: 13px;
+}
+.test-result__suggested-test-tags{
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex: 1;
+    align-content: flex-end;
+}
+.test-result__suggested-test-tag-block{
+    color: #324154;
+    background: #d5d5ff;
+    padding: 1px 7px;
+    border-radius: 5px;
+}
+.test-result__suggested-test-title{
+    text-decoration: none;
+    color: #324154;
+    cursor: pointer;
+    font-size: 18px;
+}
+.test-result__suggested-test-title:hover{
+    color: #a973ff;
+}
+
+.test-result__suggested-test-block:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 0px 10px #d5d5ff;
+}
+
+.test-result__back-link{
+    text-decoration: none;
+}
+.test-result__back-link-container{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
