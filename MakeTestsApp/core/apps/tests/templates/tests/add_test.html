@@ -1,0 +1,147 @@
+{% extends 'tests/base.html' %}
+
+{% block content %}
+<div class="background-template">
+       <div class="test-edit">
+        <div class="test-info-edit">
+            <form id="edit-test-form" method="post">
+        {% csrf_token %}
+            <div class="test-info-edit__title">
+                <input type="text" class="test-info-edit__title-input span-title" name="test_title" autocomplete="off" value="{{ test.test_title }}">
+            </div>
+            <div class="test-info-edit__content">
+                <textarea class="test-info-edit__content-textarea span-input" name="test_content">{{ test.test_content }}</textarea>
+            </div>
+            <div class="test-info-edit__tags">
+                {% if test.tags.all %}
+                    {% for tag in test.tags.all %}
+                        <div class="test-info-edit__tag-block">
+                            <span class="test-info-edit__tags-text span-text">
+                                {{ tag.name }}
+                            </span>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <div class="test-info-edit__add-tag-btn"><span>+</span></div>
+            </div>
+            <div class="test-info-edit__settings">
+                <span class="test-info-edit__settings-text span-text"></span>
+            </div>
+            </form>
+            <div class="test-info-edit__data">
+                <span class="test-info-edit__time">
+                    Посл. изменение: {{ test.time_update|date:"d-m-Y H:i:s" }}
+                </span>
+                <span class="test-info-edit__author">
+                    Автор: {{ test.author }}
+                </span>
+            </div>
+            <div class="test-info-edit__status">
+                <div class="test-info-edit__error-block"></div>
+                <button class="test-info-edit__publication-btn">Опубликовать</button>
+                <span class="test-info-edit__status-txt">Статус: {{ test.test_status }}</span>
+            </div>
+        </div>
+        <div class="test-edit__questions">
+            <div class="test-edit__questions-list">
+                {% for q, answers in questions_with_answers %}
+                    <div class="test-edit__question-block">
+                        <div class="test-questions-edit__question-block-header">
+                            <span class="test-questions-edit__question-number span-text">{{ forloop.counter }}.</span>
+                            <input autocomplete="off" type="text" class="test-questions-edit__title-input span-text" name="question_text" value="{{ q.question_text }}" data-question-id="{{ q.id }}">
+                            <div class="test-questions-edit__panel">
+                                <span class="test-questions-edit__panel-text span-text">* !</span>
+                            </div>
+                        </div>
+                        <div class="test-questions-edit__details">
+                            <div class="test-questions-edit__details-header">
+                            <div class="test-questions-edit__question-image-container">
+                                    {% if q.image %}
+                                        <button class="test-questions-edit__delete-image-btn span-answer-input" data-question-id="{{ q.id }}">Удалить картинку</button>
+                                        <img src="{{ q.image.url }}" alt="Image for question {{ q.id }}" class="test-questions-edit__question-image">
+                                    {% else %}
+                                        <input type="file" class="image-input" data-question-id="{{ q.id }}" style="display: none;">
+                                        <button class="test-questions-edit__add-image-btn span-answer-input" data-question-id="{{ q.id }}">Добавить картинку</button>
+                                    {% endif %}
+                                </div>
+                                <div class="test-questions-edit__question-title-textarea">
+                                    <textarea class="test-questions-edit__title-textarea span-input" name="question_text" data-question-id="{{ q.id }}">{{ q.question_text }}</textarea>
+                                </div>
+                                <div class="test-questions-edit__details-panel">
+                                    <div class="test-questions-edit__details-select">
+                                        <span class="test-questions-edit__details-text span-input">Тип ответов:</span>
+                                        <select class="test-questions-edit__type-selector span-answer-input" data-question-id="{{ q.id }}">
+                                            {% for choice in type_of_question_choices %}
+                                                <option value="{{ choice.0 }}" {% if q.question_type == choice.0 %}selected{% endif %}>
+                                                    {{ choice.1 }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="">Обязательный вопрос</div>
+                                </div>
+                            </div>
+                            <div class="test-questions-edit__answers-list">
+                            {% for anwr in answers %}
+                                <div class="test-questions-edit__answer-block">
+                                    <div class="test-questions-edit__answer-counter">
+                                    <span class="test-questions-edit__answer-number span-answer-input">{{ forloop.counter }}.</span>
+                                    </div>
+                                    <input
+                                        type="text"
+                                        autocomplete="off"
+                                        value="{{ anwr.answer_text }}"
+                                        data-id="{{ anwr.id }}"
+                                        class="test-questions-edit__answer-input span-answer-input"
+                                        placeholder="Ответ"
+                                    />
+                                    <input
+                                        type="checkbox"
+                                        {% if anwr.answer_flag %} checked {% endif %}
+                                        data-id="{{ anwr.id }}"
+                                        class="test-questions-edit__flag-checkbox"
+                                    />
+                                    <button class="test-questions-edit__answer-delete-btn red" data-id="{{ anwr.id }}">X</button>
+                                </div>
+                            {% endfor %}
+                            </div>
+                            <div class="test-questions-edit__add-answer-container">
+                                <button class="test-questions-edit__add-answer-btn" data-question-id="{{ q.id }}">+</button>
+                            </div>
+                            <div class="test-questions-edit__error-container"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="test-edit__add-question">
+                <form method="post" class="test-questions-edit__add-question-form" >
+                    {% csrf_token %}
+                    <div class="test-questions-edit__add-question-errors">
+                        {{ form.errors }}
+                    </div>
+                    <div class="test-questions-edit__add-question-container">
+                        <div class="test-questions-edit__add-question-form-text">{{ form.question_text }}</div>
+                        <button class="test-questions-edit__add-question-btn" type="submit"><span class="span-text">Добавить</span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="create-test-container">
+    <div class="create-test-container__title-container">
+        <span class="create-test-container__title span-title">Новый Тест</span>
+    </div>
+    <form class="create-test-container__add-test-form" method="post">
+        {% csrf_token %}
+        {% for f in form %}
+        <div class="create-test-container__form-field">{{ f }}</div>
+        <div class="create-test-container__form-error">{{ f.errors }}</div>
+        {% endfor %}
+        <div class="create-test-container__submit-container">
+            <button class="create-test-container__submit-btn" type="submit"><span class="span-input">Продолжить</span></button>
+        </div>
+    </form>
+</div>
+{% endblock %}

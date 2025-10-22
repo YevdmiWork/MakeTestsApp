@@ -1,0 +1,48 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'tests/css/test_result.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="test-result">
+        <div class="test-result__block">
+            <span class="test-result__block-title">Результат</span>
+            <div class="test-result__review-answers">
+                <span>Общее кол-во вопросов в тесте: 14</span>
+                <span>Верных ответов было дано: 10 </span>
+                <span>Не правильных ответов дано: 4</span>
+            </div>
+            <div class="test-result__back-link-container">
+                <a href="{% url 'tests:tests' %}" class="test-result__back-link">
+                    Вернуться
+                </a>
+            </div>
+        </div>
+        <div class="test-result__suggested-tests">
+            <div class="test-result__suggested-tests-header">
+                <span>Похожие тесты</span>
+            </div>
+                            {% for test in similar_tests %}
+            <div class="test-result__suggested-tests-list">
+
+                <div class="test-result__suggested-test-block">
+                    <a class="test-result__suggested-test-title" href="{{ t.get_absolute_url }}">
+                        {{ test.test_title }}
+                    </a>
+                    <div class="test-result__suggested-test-tags">
+                        {% if tests.tags.all %}
+                        {% for tag in tests.tags.all %}
+                        <div class="test-result__suggested-test-tag-block">
+                            <span class="test-result__suggested-test-tag-span">{{ tag.name }}</span>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                            </div>
+                {% empty %}
+                <span>Нет похожих тестов</span>
+                {% endfor %}
+        </div>
+    </div>
+{% endblock %}

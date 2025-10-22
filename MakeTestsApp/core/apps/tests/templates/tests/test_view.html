@@ -1,0 +1,95 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'tests/css/test_view.css' %}">
+{% endblock %}
+{% block content %}
+<div class="test-review">
+    <div class="test-review__info">
+        <div class="test-review__title">
+            <span class="test-review__title-span">{{ tests.test_title }}</span>
+        </div>
+        <div class="test-review__main">
+            <div class="test-review__content">
+                <img src="{% static 'tests/images/test_image.jpg' %}" class="test-review__test-image">
+                <span class="">
+                    {{ tests.test_content }}
+                </span>
+            </div>
+            <div class="test-review__tags">
+                <span class="">
+                        Теги:
+                {% if tests.tag.all %}
+                    {% for tag in tests.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %},{% else %}.{% endif %}
+                    {% endfor %}
+                {% endif %}
+                </span>
+            </div>
+            <div class="test-review__follow-test-container">
+                <div class="test-review__follow-test-btn">
+                    <a class="test-review__follow-test-link" href="{{ tests.get_run_url }}"> К тесту</a>
+                </div>
+            </div>
+        </div>
+        <div class="test-review__footer">
+            <span class="test-review__footer-span">
+                {{ tests.time_update|date:"d. m. Y H:i" }}
+            </span>
+            <span class="test-review__footer-span">
+                {{ tests.test_completion }}
+                <span class="test-review__icon-views">
+                </span>
+            </span>
+            <span class="test-review__footer-span">
+                {{ tests.test_rating }}
+                <span class="test-review__icon-star">
+                </span>
+            </span>
+            <span class="test-review__icon-user test-review__footer-span">
+                <a class="test-review__author-link" href="{{ profile_url }}">
+                    {{ tests.author }}
+                </a>
+            </span>
+        </div>
+    </div>
+    <div class="test-review__similar-tests">
+        <div class="test-review__similar-tests-header">
+            <span>Другие тесты</span>
+        </div>
+        {% if similar_tests %}
+            <div class="test-review__similar-tests-list">
+                {% for test in similar_tests %}
+                    <div class="test-review__similar-test-block">
+                        <a class="test-review__similar-test-title" href="{{ test.get_absolute_url }}">
+                            {{ test.test_title }}
+                        </a>
+                        <div class="test-review__similar-test-tags">
+                            {% for tag in test.tag.all %}
+                                <div class="test-review__similar-test-tag-block">
+                                    <span class="test-review__similar-test-tag-span">
+                                        {{ tag.name }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="test-review__similar-test-info">
+                            <span class="test-review__icon-views">
+                                {{ test.test_completion }}
+                            </span>
+                            <span class="test-review__icon-star">
+                                {{ test.test_rating }}
+                            </span>
+                            <span>
+                                {{ test.author.username }}
+                            </span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <span class="test-review__similar-tests-empty-span">Нет похожих тестов</span>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

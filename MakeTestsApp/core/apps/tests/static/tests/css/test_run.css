@@ -1,0 +1,113 @@
+.test-running__progression{
+    width: 20vw;
+    min-width: 200px;
+    background: #f6f6ff;
+    box-shadow: 7px 6px 3px 1px #d5d5ff;
+    border-top: 1px solid #e6e6e7;
+    border-left: 1px solid #e6e6e7;
+    border-radius: 25px;
+    padding: 20px;
+}
+.test-running__questions-list{
+    flex: 1;
+    min-width: 650px;
+    background: #f6f6ff;
+    box-shadow: 7px 6px 3px 1px #d5d5ff;
+    border-top: 1px solid #e6e6e7;
+    border-left: 1px solid #e6e6e7;
+    border-radius: 20px;
+    padding: 20px;
+    overflow-y: scroll;
+    border: 8px solid #f6f6ff;
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+.test-running{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 50px;
+    gap: 50px;
+}
+.test-running__questions-list::-webkit-scrollbar {
+  width: 20px;
+}
+.test-running__questions-list::-webkit-scrollbar-thumb {
+    background-color: #a973ffd9;
+    cursor: pointer;
+    background-clip: content-box;
+    border: 3px solid transparent;
+    border-radius: 20px;
+}
+.test-running__questions-list::-webkit-scrollbar-track {
+    background: #ededff;
+    background-clip: content-box;
+    border: 3px solid transparent;
+    border-radius: 20px;
+}
+
+.test-running__question-block{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    background: #f1f1ff;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.test-run__answer-text-field{
+    background: #ffffff;
+    border: 2px solid #d5d5ff;
+    border-radius: 5px;
+    height: 4vh;
+    min-height: 40px;
+    width: 25vw;
+    padding: 10px;
+    color: #333;
+    min-width: 250px;
+}
+.test-run__answer-text-field:focus {
+    outline: none;
+    border: 2px solid #c19aff;
+}
+.test-run__answer-text-field:hover {
+    border: 2px solid #c19aff;
+}
+.test-run__complete-test-btn{
+    border: 2px solid #c5a2ff;
+    height: 4vh;
+    width: 15vw;
+    min-width: 150px;
+    min-height: 40px;
+    background: #c19aff;
+    border-radius: 10px;
+    color: #fff;
+    filter: drop-shadow(0 0 3px #d5d5ff);
+}
+.test-run__complete-test-btn:hover{
+    border: 2px solid #cdadff;
+    background: #a973ff;
+    color: #fff;
+}
+.test-run__complete-test{
+    text-align: center;
+    margin-top: 20px;
+}
+.test-running__question-title{
+    margin-bottom: 1vh;
+}
+.test-running__answers-block{
+
+}
+.test-run__answer-checkbox{
+    margin: 0px 10px;
+}
+.test-run__answer-radio{
+    margin: 0px 10px;
+}
+.test-running-container{
+    height: 50vh;
+}

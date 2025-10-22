@@ -1,0 +1,48 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'tests/css/test_run.css' %}">
+{% endblock %}
+{% block content %}
+<div class="test-running">
+    <div class="test-running__progression">
+        <div>
+              {% for question in questions %}
+              <div class="question-block">
+                <p><strong>Вопрос {{forloop.counter}}</strong></p>
+              </div>
+            {% endfor %}
+        </div>
+        <div>
+            <span>Завершить</span>
+        </div>
+    </div>
+    <div class="test-running__questions-list">
+        <div class="test-running-container">
+        <form method="post">
+            {% csrf_token %}
+            {% for question, field in question_fields %}
+                <div class="test-running__question-block">
+                    <div class="test-running__question-title">
+                        <strong>Вопрос {{ forloop.counter }}: {{ field.label }}</strong>
+                    </div>
+                    {% if question.question_image %}
+                    <div class="test__question-image-container">
+                        <img class="test__question-image"
+                             src="{{ question.question_image.url }}"
+                             alt="Изображение к вопросу">
+                    </div>
+                    {% endif %}
+                    <div class="test-running__answers-block">
+                    {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="test-run__complete-test">
+                <button type="submit" class="test-run__complete-test-btn">Завершить тест</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
