@@ -4,6 +4,8 @@ from MakeTestsApp.core.project import settings
 
 urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
+    path('', include('tests.urls', namespace='tests')),
+    path('', include('users.urls')),
 ]
 
 if settings.DEBUG and getattr(settings, "DEBUG_TOOLBAR", False):
