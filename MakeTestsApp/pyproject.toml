@@ -1,0 +1,15 @@
+[project]
+name = "maketestsapp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "django>=5.2.7",
+    "django-debug-toolbar>=6.0.0",
+    "django-environ>=0.12.0",
+    "jinja2>=3.1.6",
+    "pillow>=12.0.0",
+    "psycopg2>=2.9.11",
+    "uuid>=1.30",
+]
