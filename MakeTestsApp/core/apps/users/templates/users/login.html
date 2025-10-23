@@ -1,0 +1,22 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'users/css/login.css' %}">
+{% endblock %}
+{% block content %}
+<div class="login">
+    <div class="login__form-container">
+        <form class="login__form" method="post">
+            {% csrf_token %}
+            <span class="login__form-indent">Авторизация</span>
+            {% for f in form %}
+            <div class="login__form-error-block">{{ f.errors }}</div>
+            {{ f }}
+            {% endfor %}
+            <a class="login__extra-link" href="{% url 'users:register' %}">Забыли пароль?</a>
+            <div><button class="login__form-btn" type="submit">Войти</button></div>
+        </form>
+        <a class="login__extra-link" href="{% url 'users:register' %}"> У вас еще нет аккаунта на сайте?</a>
+    </div>
+</div>
+{% endblock %}

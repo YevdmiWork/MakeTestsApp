@@ -1,0 +1,21 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet" href="{% static 'users/css/registration.css' %}">
+{% endblock %}
+{% block content %}
+<div class="registration">
+    <div class="registration__form-container">
+        <form class="registration__form" method="post">
+            {% csrf_token %}
+            <span class="registration__form-indent">Регистрация</span>
+            {% for f in form %}
+            <div class="registration__form-error-block">{{ f.errors }}</div>
+            {{ f }}
+            {% endfor %}
+            <div><button class="registration__form-btn" type="submit">Войти</button></div>
+        </form>
+        <a class="registration__extra-link" href="{% url 'users:login' %}"> У вас уже есть аккаунт на сайте?</a>
+    </div>
+</div>
+{% endblock %}
