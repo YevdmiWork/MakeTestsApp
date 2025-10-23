@@ -2,7 +2,7 @@ from django.urls import reverse
 
 menu = [
     {'title': "Создать тест", 'url_name': 'tests:add_test'},
-    {'title': "Все тесты", 'url_name': 'tests:tests_all'},
+    {'title': "Все тесты", 'url_name': 'tests:home'},
 ]
 
 def common_context(request):
