@@ -23,18 +23,18 @@ class TestQuerySet(models.QuerySet):
 
     def with_test_data(self):
         return self.with_fields([
-            'test_rating',
-            'test_completion',
+            'rating',
+            'completion',
         ])
 
     def with_test_content(self):
         return self.with_fields([
-            'test_content',
+            'content',
         ])
 
     def with_test_status(self):
         return self.with_fields([
-            'test_status',
+            'status',
         ])
 
 

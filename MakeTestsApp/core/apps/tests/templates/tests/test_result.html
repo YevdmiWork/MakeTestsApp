@@ -22,12 +22,12 @@
             <div class="test-result__suggested-tests-header">
                 <span>Похожие тесты</span>
             </div>
-                            {% for test in similar_tests %}
+            {% for test in similar_tests %}
             <div class="test-result__suggested-tests-list">
 
                 <div class="test-result__suggested-test-block">
                     <a class="test-result__suggested-test-title" href="{{ t.get_absolute_url }}">
-                        {{ test.test_title }}
+                        {{ test.title }}
                     </a>
                     <div class="test-result__suggested-test-tags">
                         {% if tests.tags.all %}
