@@ -34,10 +34,10 @@
     {% for test in tests %}
         <a class="tests-list__test-title-link" href="{{ test.get_absolute_url }}">
         <div class="tests-list__test-container"
-             data-rating="{{ test.test_rating }}"
-             data-completion="{{ test.test_completion }}">
+             data-rating="{{ test.rating }}"
+             data-completion="{{ test.completion }}">
             <div class="tests-list__test-header">
-                    <span class="tests-list__test-title">{{ test.test_title }}</span>
+                    <span class="tests-list__test-title">{{ test.title }}</span>
             </div>
             <div class="tests-list__test-body">
                 <img src="{% static 'tests/images/test_image.jpg' %}" class="tests-list__test-image">
@@ -51,8 +51,8 @@
             </div>
             <div class="tests-list__test-footer">
                 <span class="tests-list__test-info">{{ test.author }}</span>
-                <span class="tests-list__test-info">{{ test.test_completion }}<span class="test-review__icon-views"></span></span>
-                <span class="tests-list__test-info">{{ test.test_rating }}<span class="test-review__icon-star"></span></span>
+                <span class="tests-list__test-info">{{ test.completion }}<span class="test-review__icon-views"></span></span>
+                <span class="tests-list__test-info">{{ test.rating }}<span class="test-review__icon-star"></span></span>
                 <span class="tests-list__test-info">{{ test.time_update|date:"d. m. Y" }}</span>
             </div>
         </div>

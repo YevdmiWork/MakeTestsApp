@@ -7,24 +7,17 @@
 <div class="test-review">
     <div class="test-review__info">
         <div class="test-review__title">
-            <span class="test-review__title-span">{{ tests.test_title }}</span>
+            <span class="test-review__title-span">{{ tests.title }}</span>
         </div>
         <div class="test-review__main">
             <div class="test-review__content">
                 <img src="{% static 'tests/images/test_image.jpg' %}" class="test-review__test-image">
                 <span class="">
-                    {{ tests.test_content }}
+                    {{ tests.content }}
                 </span>
             </div>
             <div class="test-review__tags">
-                <span class="">
-                        Теги:
-                {% if tests.tag.all %}
-                    {% for tag in tests.tag.all %}
-                        {{ tag.name }}{% if not forloop.last %},{% else %}.{% endif %}
-                    {% endfor %}
-                {% endif %}
-                </span>
+
             </div>
             <div class="test-review__follow-test-container">
                 <div class="test-review__follow-test-btn">
@@ -37,12 +30,12 @@
                 {{ tests.time_update|date:"d. m. Y H:i" }}
             </span>
             <span class="test-review__footer-span">
-                {{ tests.test_completion }}
+                {{ tests.completion }}
                 <span class="test-review__icon-views">
                 </span>
             </span>
             <span class="test-review__footer-span">
-                {{ tests.test_rating }}
+                {{ tests.rating }}
                 <span class="test-review__icon-star">
                 </span>
             </span>
@@ -55,14 +48,16 @@
     </div>
     <div class="test-review__similar-tests">
         <div class="test-review__similar-tests-header">
-            <span>Другие тесты</span>
+            <span>
+                Другие тесты
+            </span>
         </div>
         {% if similar_tests %}
             <div class="test-review__similar-tests-list">
                 {% for test in similar_tests %}
                     <div class="test-review__similar-test-block">
                         <a class="test-review__similar-test-title" href="{{ test.get_absolute_url }}">
-                            {{ test.test_title }}
+                            {{ test.title }}
                         </a>
                         <div class="test-review__similar-test-tags">
                             {% for tag in test.tag.all %}
@@ -75,10 +70,10 @@
                         </div>
                         <div class="test-review__similar-test-info">
                             <span class="test-review__icon-views">
-                                {{ test.test_completion }}
+                                {{ test.completion }}
                             </span>
                             <span class="test-review__icon-star">
-                                {{ test.test_rating }}
+                                {{ test.rating }}
                             </span>
                             <span>
                                 {{ test.author.username }}
@@ -88,7 +83,9 @@
                 {% endfor %}
             </div>
         {% else %}
-            <span class="test-review__similar-tests-empty-span">Нет похожих тестов</span>
+            <span class="test-review__similar-tests-empty-span">
+                Нет похожих тестов
+            </span>
         {% endif %}
     </div>
 </div>

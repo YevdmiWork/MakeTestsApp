@@ -9,10 +9,10 @@
             <form id="edit-test-form" method="post">
         {% csrf_token %}
             <div class="test-info-edit__title">
-                <input type="text" class="test-info-edit__title-input span-title" name="test_title" autocomplete="off" value="{{ test.test_title }}">
+                <input type="text" class="test-info-edit__title-input span-title" name="title" autocomplete="off" value="{{ test.title }}">
             </div>
             <div class="test-info-edit__content">
-                <textarea class="test-info-edit__content-textarea span-input" name="test_content">{{ test.test_content }}</textarea>
+                <textarea class="test-info-edit__content-textarea span-input" name="content">{{ test.content }}</textarea>
             </div>
             <div class="test-info-edit__tags">
                 {% if test.tag.all %}
@@ -41,7 +41,7 @@
             <div class="test-info-edit__status">
                 <div class="test-info-edit__error-block"></div>
                 <button class="test-info-edit__publication-btn">Опубликовать</button>
-                <span class="test-info-edit__status-txt">Статус: {{ test.test_status }}</span>
+                <span class="test-info-edit__status-txt">Статус: {{ test.status }}</span>
             </div>
         </div>
         <div class="questions-edit">
