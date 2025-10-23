@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'core.apps.tests.apps.TestsConfig',
-    'core.apps.users.apps.UsersConfig'
+    'core.apps.users.apps.UsersConfig',
+    'core.services'
 ]
 
 MIDDLEWARE = [
@@ -57,6 +58,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'core.services.context_processors.common_context',
             ],
         },
     },
