@@ -14,7 +14,7 @@ class TestQuerySet(models.QuerySet):
     def with_fields(self, extra_fields=None):
         current_fields = getattr(self, '_extra_fields', [])
         fields = list(set(current_fields + self.base_fields + (extra_fields or [])))
-        queryset = self.select_related('author').only(*fields)
+        queryset = self.select_related('author').prefetch_related('tag').only(*fields)
         queryset._extra_fields = fields
         return queryset
 
