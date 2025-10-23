@@ -1,5 +1,16 @@
+from enum import Enum
 from django.db import models
 from django.contrib.auth import get_user_model
+from .managers import TestQuerySet, PublishedTestManager
+
+
+class TestStatus(Enum):
+    PUBLISHED = 'published'
+    UNPUBLISHED = 'unpublished'
+
+    @classmethod
+    def choices(cls):
+        return [(item.value, item.name) for item in cls]
 
 class Test(models.Model):
     title = models.CharField(
@@ -57,6 +68,16 @@ class Test(models.Model):
         blank=False,
         null=False,
     )
+
+    status = models.CharField(
+        max_length=30,
+        choices=TestStatus.choices(),
+        default=TestStatus.UNPUBLISHED.value,
+        verbose_name='Статус'
+    )
+
+    objects = TestQuerySet.as_manager()
+    published = PublishedTestManager()
 
     class Meta:
         ordering = ["-completion"]
