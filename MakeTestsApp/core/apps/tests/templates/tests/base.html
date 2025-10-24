@@ -14,7 +14,34 @@
 </head>
 <body>
     <header>
-
+        <div class="header__menu-list">
+            {% for item in menu %}
+            <div class="header__menu">
+                <a class="header__menu-link" href="{% url item.url_name %}">
+                    <span class="header__menu-text">{{ item.title }}</span>
+                </a>
+            </div>
+            {% endfor %}
+            {% if profile_url %}
+            <div class="header__menu header__menu_float-right">
+                <a class="header__menu-link header__menu-link_warns" href="{% url 'users:logout' %}">
+                    <span class="header__menu-logout header__menu-text">выйти</span>
+                </a>
+                <a class="header__username-link" href="{{ profile_url }}">
+                    <span class="header__menu-text"> {{user.username}} </span>
+                </a>
+            </div>
+            {% else %}
+            <div class="header__menu header__menu_float-right">
+                    <a class="header__menu-link" href="{% url 'users:register' %}">
+                        <span class="header__menu-text">Регистрация</span>
+                    </a>
+                    <a class="header__menu-link" href="{% url 'users:login' %}">
+                        <span class="header__menu-text">Войти</span>
+                    </a>
+            </div>
+            {% endif %}
+        </div>
     </header>
     <main>
             {% block content %}{% endblock content %}
