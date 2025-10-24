@@ -37,6 +37,8 @@ class TestQuerySet(models.QuerySet):
             'status',
         ])
 
+    def by_author_username(self, username: str):
+        return self.filter(author__username=username).order_by('-time_create')
 
 class PublishedTestManager(models.Manager):
     def get_queryset(self):
