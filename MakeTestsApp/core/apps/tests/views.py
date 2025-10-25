@@ -1,5 +1,11 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+
+from .forms import AddTestForm
 from .models import Test
+from .services import create_test
 
 
 class AllTests(ListView):
@@ -37,6 +43,12 @@ class TestEdit(BaseTestView):
         return Test.objects.with_test_status().with_test_content()
 
 
-class AddTest(CreateView):
+class AddTest(LoginRequiredMixin, CreateView):
     model = Test
     template_name = 'tests/add_test.html'
+    form_class = AddTestForm
+
+    def form_valid(self, form):
+        test = create_test(self.request.user, form.cleaned_data)
+        return redirect(test.get_edit_url())
+
