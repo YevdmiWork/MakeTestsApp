@@ -38,19 +38,19 @@
                 <tr class="profile__table-row">
                     <td class="profile__td-cell profile__table-cell--title">
                         <a class="profile__td-cell--title-link" href="{{ t.get_absolute_url }}">
-                            {{ t.test_title }}
-                            <a href="{{ t.get_edit_url }}">Редактировать</a>
+                            {{t.title}}
+                            <a href="{{ t.get_edit_url }}">(Редактировать)</a>
                         </a>
                     </td>
                     <td class="profile__td-cell profile__table-cell--time_create">
                         <span class="profile__table-span">{{ t.time_create|date:"d. m. Y" }}</span>
                     </td>
                     <td class="profile__td-cell profile__table-cell--rating">
-                        <span class="profile__table-span">{{ t.test_rating }}</span>
+                        <span class="profile__table-span">{{ t.rating }}</span>
                         <span class="profile__icon profile__icon-star">&#9733;</span>
                     </td>
                     <td class="profile__td-cell profile__table-cell--completion">
-                        <span class="profile__table-span">{{ t.test_completion }}</span>
+                        <span class="profile__table-span">{{ t.completion }}</span>
                     </td>
                     <td class="profile__td-cell profile__table-cell--status">
                         <span class="profile__table-span">{{ t.get_status_display }}</span>
