@@ -1,11 +1,8 @@
 from enum import Enum
-
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-
-from .managers import TestQuerySet, PublishedTestManager
+from .managers import TestQuerySet, PublishedTestManager, QuestionManager
 
 
 class TestStatus(Enum):
@@ -68,6 +65,7 @@ class Test(models.Model):
         null=False,
         blank=False,
         default=None,
+        db_index=True,
     )
 
     rating = models.IntegerField(
@@ -88,14 +86,16 @@ class Test(models.Model):
         max_length=30,
         choices=TestStatus.choices(),
         default=TestStatus.UNPUBLISHED.value,
-        verbose_name='Статус'
+        verbose_name='Статус',
+        db_index = True,
     )
 
     tag = models.ManyToManyField(
         Tag,
         related_name='tests',
         blank=True,
-        verbose_name='Теги'
+        verbose_name='Теги',
+        db_index = True,
     )
 
     objects = TestQuerySet.as_manager()
@@ -116,3 +116,81 @@ class Test(models.Model):
     def get_run_url(self):
         return reverse('tests:test_run', kwargs={'test_slug': self.slug})
 
+
+class Question(models.Model):
+
+    class QuestionType(models.TextChoices):
+        SINGLE_CHOICE = 'SC', 'Один вариант'
+        MULTIPLE_CHOICES = 'MC', 'Несколько вариантов'
+        TEXT_FIELD = 'TF', 'Текстовое поле'
+
+    test = models.ForeignKey(
+        'Test',
+        on_delete=models.CASCADE,
+        verbose_name="Связанный тест",
+        related_name='related_test',
+        db_index=True,
+    )
+
+    text = models.CharField(
+        max_length=350,
+        verbose_name='Вопрос',
+        blank=False,
+        null=False,
+    )
+
+    image = models.ImageField(
+        upload_to="photos/%Y/%m/%d/",
+        blank=True,
+        null=True,
+    )
+
+    type = models.CharField(
+        max_length=2,
+        choices=QuestionType.choices,
+        default=QuestionType.SINGLE_CHOICE,
+        verbose_name='Тип вопроса',
+    )
+
+    objects = QuestionManager()
+
+    class Meta:
+        ordering = ['id']
+        indexes = [
+            models.Index(fields=['type']),
+        ]
+
+    def __str__(self):
+        return self.text[:50]
+
+
+class Answer(models.Model):
+    question = models.ForeignKey(
+        'Question',
+        on_delete=models.CASCADE,
+        verbose_name="Связанный вопрос",
+        related_name='answers',
+        db_index=True,
+    )
+
+    text = models.CharField(
+        max_length=299,
+        verbose_name='Ответ',
+        blank=False,
+        null=False,
+    )
+
+    flag = models.BooleanField(
+        default=False,
+        verbose_name='Правильный ответ',
+        db_index=True,
+    )
+
+    class Meta:
+        ordering = ['id']
+        indexes = [
+            models.Index(fields=['flag']),
+        ]
+
+    def __str__(self):
+        return self.text[:50]

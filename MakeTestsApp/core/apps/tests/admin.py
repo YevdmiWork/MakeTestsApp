@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .forms import TestAdminForm
-from .models import Test, Tag
+from .models import Test, Tag, Question, Answer
 from .services import generate_unique_slug
+
 
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
@@ -49,9 +50,72 @@ class TestAdmin(admin.ModelAdmin):
 class TagAdmin(admin.ModelAdmin):
     list_display = (
         'id',
-        'name'
+        'name',
     )
     list_display_links = (
         'id',
-        'name'
+        'name',
+    )
+
+
+class AnswerInline(admin.TabularInline):
+    model = Answer
+    extra = 0
+    min_num = 2
+    max_num = 10
+    fields = (
+        'text',
+        'flag'
+    )
+    show_change_link = True
+    validate_min = True
+
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'test',
+        'text',
+        'type',
+    )
+    list_display_links = (
+        'id',
+        'text'
+    )
+    list_filter = (
+        'test',
+        'type'
+    )
+    search_fields = (
+        'text',
+    )
+    ordering = (
+        'id',
+    )
+    inlines = [AnswerInline]
+
+
+@admin.register(Answer)
+class AnswerAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'question',
+        'text',
+        'flag',
+    )
+    list_display_links = (
+        'id',
+        'text'
+    )
+    list_filter = (
+        'flag',
+        'question__test'
+    )
+    search_fields = (
+        'text',
+        'question__text'
+    )
+    ordering = (
+        'id',
     )
