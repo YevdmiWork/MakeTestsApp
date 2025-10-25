@@ -21,6 +21,8 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 ADMIN_URL = os.getenv('ADMIN_URL', 'admin/')
 
+INTERNAL_IPS = env('INTERNAL_IPS').split(',')
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
