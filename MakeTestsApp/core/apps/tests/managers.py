@@ -63,6 +63,15 @@ class TestQuerySet(models.QuerySet):
         )
 
 
+class QuestionQuerySet(models.QuerySet):
+    def with_answers(self):
+        return self.prefetch_related('answers').only(
+            'text',
+            'image',
+            'type',
+        )
+
+
 class PublishedTestManager(models.Manager):
     def get_queryset(self):
         return (
@@ -70,3 +79,13 @@ class PublishedTestManager(models.Manager):
             .with_test_data()
             .published()
         )
+
+
+class QuestionManager(models.Manager):
+    def get_queryset(self):
+        return (
+            QuestionQuerySet(self.model, using=self._db)
+        )
+
+    def with_answers(self):
+        return self.get_queryset().with_answers()
