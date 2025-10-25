@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count, Q
 
 
 class TestQuerySet(models.QuerySet):
@@ -39,6 +40,28 @@ class TestQuerySet(models.QuerySet):
 
     def by_author_username(self, username: str):
         return self.filter(author__username=username).order_by('-time_create')
+
+    def similar_to(self, test, limit=4):
+        test_tags = test.tag.values_list('id', flat=True)
+        return (
+            self.exclude(id=test.id)
+            .filter(tag__in=test_tags)
+            .annotate(common_tags=Count('tag', filter=Q(tag__in=test_tags)))
+            .order_by('-common_tags', '-completion')
+            .select_related('author')
+            .only(
+                'id',
+                'title',
+                'slug',
+                'completion',
+                'rating',
+                'author_id',
+                'author__username'
+            )
+            .prefetch_related('tag')
+            .distinct()[:limit]
+        )
+
 
 class PublishedTestManager(models.Manager):
     def get_queryset(self):

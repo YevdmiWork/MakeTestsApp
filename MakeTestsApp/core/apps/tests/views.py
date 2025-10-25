@@ -27,6 +27,12 @@ class TestView(BaseTestView):
     def get_queryset(self):
         return Test.objects.with_test_content().with_test_data()
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        test = self.object
+        context['similar_tests'] = Test.objects.similar_to(test)
+        return context
+
 
 class TestRun(BaseTestView):
     template_name = 'tests/test_run.html'
