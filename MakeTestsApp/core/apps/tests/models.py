@@ -1,4 +1,5 @@
 from enum import Enum
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -115,6 +116,11 @@ class Test(models.Model):
 
     def get_run_url(self):
         return reverse('tests:test_run', kwargs={'test_slug': self.slug})
+
+    def clean(self):
+        super().clean()
+        if len((self.title or "").strip()) < 4:
+            raise ValidationError({'title': "Слишком короткое название!"})
 
 
 class Question(models.Model):
