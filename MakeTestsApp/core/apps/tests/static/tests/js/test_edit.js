@@ -13,16 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     function sendUpdate(field, value) {
-        // Проверка для title: если пустое, подсвечиваем красным и не отправляем
         if (field === 'title' && !value.trim()) {
             titleInput.style.borderBottom = "3px solid red";
             return;
         } else {
-            // Сбрасываем красную подсветку, если есть
             if (field === 'title') titleInput.style.borderBottom = "";
         }
 
-        // Для content пустое значение можно заменить на дефолт
         if (field === 'content' && !value.trim()) {
             value = "Нет описания";
         }
@@ -83,11 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!data.success) return;
 
             form.reset();
-
-            // вставляем готовый HTML в конец списка
             questionsList.insertAdjacentHTML('beforeend', data.question_html);
-
-            // пересчет нумерации на фронтенде (если будут удаления)
             questionsList.querySelectorAll('.questions-edit__question-number').forEach((el, idx) => {
                 el.textContent = (idx + 1) + '.';
             });
@@ -97,4 +90,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
