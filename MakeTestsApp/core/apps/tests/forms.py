@@ -3,12 +3,15 @@ from .models import Test, Question, Answer
 
 
 class TestAdminForm(forms.ModelForm):
+    max_tags = 4
 
     def clean(self):
         cleaned_data = super().clean()
         tags = cleaned_data.get('tag')
-        if tags and tags.count() > 4:
-            raise forms.ValidationError('Вы можете выбрать не более 4 тегов.')
+        if tags and tags.count() > self.max_tags:
+            raise forms.ValidationError(
+                f'Не больше {self.max_tags} тегов'
+            )
         return cleaned_data
 
 
@@ -25,12 +28,6 @@ class AddTestForm(forms.ModelForm):
                 }
             ),
         }
-
-    def clean_title(self):
-        title = self.cleaned_data['title'].strip()
-        if len(title) < 3:
-            raise forms.ValidationError("Название должно быть не короче 3 символов.")
-        return title
 
 
 class TestEditForm(forms.ModelForm):
