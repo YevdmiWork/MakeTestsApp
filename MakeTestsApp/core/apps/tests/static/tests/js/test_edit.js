@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const testEditBlock = document.querySelector('.test-edit');
 
     if (!titleInput || !contentInput || !testEditBlock) {
-        console.error("Не найдены элементы формы. Проверьте селекторы или HTML.");
+        console.error("Не найдены элементы формы");
         return;
     }
 
@@ -13,16 +13,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     function sendUpdate(field, value) {
-        // Проверка для title: если пустое, подсвечиваем красным и не отправляем
         if (field === 'title' && !value.trim()) {
             titleInput.style.borderBottom = "3px solid red";
             return;
         } else {
-            // Сбрасываем красную подсветку, если есть
             if (field === 'title') titleInput.style.borderBottom = "";
         }
 
-        // Для content пустое значение можно заменить на дефолт
         if (field === 'content' && !value.trim()) {
             value = "Нет описания";
         }
@@ -58,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
     contentInput.addEventListener('blur', () => sendUpdate('content', contentInput.value));
 });
 
+
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.questions-edit__add-question-form');
     const questionsList = document.querySelector('.questions-edit__questions-list-scroll');
@@ -84,10 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             form.reset();
 
-            // вставляем готовый HTML в конец списка
             questionsList.insertAdjacentHTML('beforeend', data.question_html);
 
-            // пересчет нумерации на фронтенде (если будут удаления)
             questionsList.querySelectorAll('.questions-edit__question-number').forEach((el, idx) => {
                 el.textContent = (idx + 1) + '.';
             });
@@ -98,3 +94,142 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+    document.querySelectorAll('.questions-edit__add-answer-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const addUrl = form.dataset.addUrl;
+
+            fetch(addUrl, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrfToken },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const questionBlock = form.closest('.questions-edit__details');
+                    const answersContainer = questionBlock.querySelector('.questions-edit__answers-list');
+                    answersContainer.insertAdjacentHTML('beforeend', data.html);
+                    form.reset();
+                } else {
+                    alert(data.error || 'Ошибка добавления ответа');
+                }
+            })
+            .catch(() => alert('Ошибка запроса'));
+        });
+    });
+
+    document.querySelectorAll('.questions-edit__answers-list').forEach(container => {
+        container.addEventListener('input', function(e) {
+            if (e.target.classList.contains('questions-edit__answer-input')) {
+                const input = e.target;
+                const answerId = input.dataset.answerId;
+                const text = input.value.trim();
+                if (!text) {
+                    input.style.borderBottom = '1px solid red';
+                    return;
+                }
+                updateAnswer(answerId, { text }, input);
+            }
+        });
+
+        container.addEventListener('change', function(e) {
+            if (e.target.classList.contains('questions-edit__answer-flag')) {
+                const checkbox = e.target;
+                const answerId = checkbox.dataset.answerId;
+                const flag = checkbox.checked;
+                updateAnswer(answerId, { flag }, checkbox);
+            }
+        });
+    });
+
+    function updateAnswer(answerId, data, el) {
+        const container = el.closest('.questions-edit__answers-list');
+        const updateUrl = container.dataset.updateUrl;
+
+        fetch(updateUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({ answer_id: answerId, ...data })
+        })
+        .then(res => res.json())
+        .then(resp => {
+            if (resp.success) {
+                el.style.borderBottom = '1px solid green';
+                setTimeout(() => el.style.borderBottom = '1px solid #bfbfbf', 1000);
+            } else {
+                el.style.borderBottom = '1px solid red';
+            }
+        })
+        .catch(() => el.style.borderBottom = '1px solid red');
+    }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const questionBlocks = document.querySelectorAll(".questions-edit__question-block");
+    let activeBlock = null;
+
+    questionBlocks.forEach(block => {
+        const header = block.querySelector(".questions-edit__question-block-header");
+        const details = block.querySelector(".questions-edit__details");
+        details.style.maxHeight = "0";
+        details.style.overflow = "hidden";
+        details.style.transition = "max-height 0.35s ease";
+
+        header.addEventListener("click", (event) => {
+            event.stopPropagation();
+
+            if (activeBlock === block) {
+                closeDetails(block);
+                activeBlock = null;
+                return;
+            }
+
+            if (activeBlock) {
+                closeDetails(activeBlock);
+            }
+
+            openDetails(block);
+            activeBlock = block;
+        });
+    });
+
+    document.addEventListener("click", (event) => {
+        if (
+            activeBlock &&
+            !activeBlock.contains(event.target)
+        ) {
+            closeDetails(activeBlock);
+            activeBlock = null;
+        }
+    });
+
+    function openDetails(block) {
+        const details = block.querySelector(".questions-edit__details");
+        details.style.maxHeight = details.scrollHeight + "px";
+    }
+
+    function closeDetails(block) {
+        const details = block.querySelector(".questions-edit__details");
+        details.style.maxHeight = "0";
+    }
+
+    const observer = new MutationObserver(() => {
+        if (activeBlock) {
+            const details = activeBlock.querySelector(".questions-edit__details");
+            details.style.maxHeight = details.scrollHeight + "px";
+        }
+    });
+
+    document.querySelectorAll(".questions-edit__details").forEach(details => {
+        observer.observe(details, { childList: true, subtree: true });
+    });
+});

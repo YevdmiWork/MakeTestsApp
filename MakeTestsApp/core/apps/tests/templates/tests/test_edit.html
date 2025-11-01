@@ -7,7 +7,7 @@
 {% block content %}
 <div class="test-edit" data-test-id="{{ test.id }}" data-update-url="{% url 'tests:update_test_info' %}">
     <div class="test-info-edit">
-        <form id="edit-test-form" method="post">
+        <form method="post">
             {% csrf_token %}
             <div class="test-info-edit__title">
                 {{ test_edit_form.title.errors }}
@@ -41,11 +41,8 @@
         </div>
 
         <div class="test-info-edit__status">
-            <form id="test-status-form" method="post">
+            <form method="post">
                 {% csrf_token %}
-                {{ test_status_form.non_field_errors }}
-                {{ test_status_form.status.errors }}
-                {{ test_status_form.status }}
                 <button type="submit" class="test-info-edit__publication-btn">Опубликовать</button>
             </form>
             <span class="test-info-edit__status-txt">Статус: {{ test.status }}</span>
@@ -53,10 +50,79 @@
     </div>
 
     <div class="questions-edit">
-        <div class="questions-edit__questions-list">
+        <div class="questions-edit__questions-list " id="questions-container" data-update-answer-url="{% url 'tests:update_answer' %}">
             <div class="questions-edit__questions-list-scroll">
                 {% for question in questions %}
-                    {% include 'tests/question_block.html' with question=question question_number=forloop.counter %}
+                    <div class="questions-edit__question-block">
+    <div class="questions-edit__question-block-header">
+        <span class="questions-edit__question-number span-text">{{ forloop.counter }}.</span>
+        <input type="text"
+               value="{{ question.text }}"
+               data-question-id="{{ question.id }}"
+               class="questions-edit__title-input span-text"
+               autocomplete="off">
+        <div class="questions-edit__panel">
+            <span class="questions-edit__panel-text span-text">* !</span>
+        </div>
+    </div>
+
+    <div class="questions-edit__details">
+        <div class="questions-edit__details-header">
+            <div class="questions-edit__question-image-container">
+                {% if question.image %}
+                    <button class="questions-edit__delete-image-btn span-answer-input" data-question-id="{{ question.id }}">Удалить картинку</button>
+                    <img src="{{ question.image.url }}" alt="Image for question {{ question.id }}" class="questions-edit__question-image">
+                {% else %}
+                    <input type="file" class="image-input" data-question-id="{{ question.id }}" style="display: none;">
+                    <button class="questions-edit__add-image-btn span-answer-input" data-question-id="{{ question.id }}">Добавить картинку</button>
+                {% endif %}
+            </div>
+            <div class="questions-edit__question-title-textarea">
+                <textarea class="questions-edit__title-textarea span-input"
+                          name="text"
+                          data-question-id="{{ question.id }}">{{ question.text }}
+                </textarea>
+            </div>
+
+            <div class="questions-edit__details-panel">
+                <div class="questions-edit__details-select">
+                    <span class="questions-edit__details-text span-input">Тип ответов:</span>
+                    <select class="questions-edit__type-selector span-answer-input" data-question-id="{{ question.id }}">
+                        {% for choice in type_of_question_choices %}
+                            <option value="{{ choice.0 }}" {% if question.type == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="questions-edit__answers-list"
+             id="answers-container"
+             data-update-url="{% url 'tests:update_answer' %}">
+            <meta name="csrf-token" content="{{ csrf_token }}">
+            {% for answer in question.answers.all %}
+                {% include 'tests/answer_block.html' with answer=answer counter=forloop.counter %}
+            {% endfor %}
+        </div>
+        <div class="questions-edit__add-answer-container">
+<form method="post"
+      class="questions-edit__add-answer-form"
+      data-question-id="{{ question.id }}"
+      data-add-url="{% url 'tests:add_answer' %}">
+    {% csrf_token %}
+    <input type="hidden" name="question_id" value="{{ question.id }}">
+    <div class="questions-edit__add-answer">
+        <div class="questions-edit__add-answer-input">
+            {{ add_answer_form.text }}
+        </div>
+        <div class="questions-edit__add-answer-flag">
+            {{ add_answer_form.flag }}
+        </div>
+    </div>
+    <button type="submit" class="questions-edit__add-answer-btn" data-question-id="{{ question.id }}">+</button>
+</form>
+        </div>
+    </div>
+</div>
                 {% endfor %}
             </div>
         </div>
