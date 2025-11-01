@@ -32,7 +32,6 @@
 .test-result__block-title{
     text-align: center;
     margin-bottom: 5%;
-
 }
 
 .test-result__suggested-tests-header{
@@ -77,6 +76,7 @@
 .test-result__suggested-test-tag-span{
     font-size: 13px;
 }
+
 .test-result__suggested-test-tags{
     margin-top: 10px;
     display: flex;
@@ -85,18 +85,21 @@
     flex: 1;
     align-content: flex-end;
 }
+
 .test-result__suggested-test-tag-block{
     color: #324154;
     background: #d5d5ff;
     padding: 1px 7px;
     border-radius: 5px;
 }
+
 .test-result__suggested-test-title{
     text-decoration: none;
     color: #324154;
     cursor: pointer;
     font-size: 18px;
 }
+
 .test-result__suggested-test-title:hover{
     color: #a973ff;
 }
@@ -109,6 +112,7 @@
 .test-result__back-link{
     text-decoration: none;
 }
+
 .test-result__back-link-container{
     flex: 1;
     display: flex;

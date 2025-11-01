@@ -47,23 +47,14 @@ class TestEditForm(forms.ModelForm):
         }
 
 
-class TestStatusEditForm(forms.ModelForm):
-    class Meta:
-        model = Test
-        fields = ['status']
-        widgets = {
-            'status': forms.Select(attrs={'class': 'test-status-select'})
-        }
-
-
 class AddQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['text', 'type']
         widgets = {
             'text': forms.TextInput(attrs={
-                'class': 'questions-edit__new-question-input span-input',
-                'placeholder': 'Введите текст вопроса'
+                'class': 'questions-edit__add-question-form-input span-input',
+                'placeholder': 'Новый вопрос'
             }),
             'type': forms.Select(attrs={
                 'class': 'questions-edit__type-selector'
@@ -78,6 +69,6 @@ class AnswerForm(forms.ModelForm):
         widgets = {
             'text': forms.TextInput(attrs={
                 'class': 'questions-edit__answer-input span-answer-input',
-                'placeholder': 'Ответ'
+                'placeholder': 'Новый ответ'
             }),
         }

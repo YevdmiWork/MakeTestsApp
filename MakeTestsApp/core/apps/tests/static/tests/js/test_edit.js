@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const testEditBlock = document.querySelector('.test-edit');
 
     if (!titleInput || !contentInput || !testEditBlock) {
-        console.error("Не найдены элементы формы. Проверьте селекторы или HTML.");
+        console.error("Не найдены элементы формы");
         return;
     }
 
@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
     titleInput.addEventListener('blur', () => sendUpdate('title', titleInput.value));
     contentInput.addEventListener('blur', () => sendUpdate('content', contentInput.value));
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.questions-edit__add-question-form');

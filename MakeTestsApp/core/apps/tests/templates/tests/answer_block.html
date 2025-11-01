@@ -1,0 +1,17 @@
+{# templates/tests/answer_block.html #}
+<div class="questions-edit__answer-block" id="answer-{{ answer.id }}">
+    <div class="questions-edit__answer-counter">
+        <span class="questions-edit__answer-number span-answer-input">{{ counter }}.</span>
+    </div>
+
+    <input type="text"
+           class="questions-edit__answer-input span-answer-input"
+           data-answer-id="{{ answer.id }}"
+           value="{{ answer.text|escape }}"
+           placeholder="Ответ">
+
+    <input type="checkbox"
+           class="questions-edit__answer-flag"
+           data-answer-id="{{ answer.id }}"
+           {% if answer.flag %}checked{% endif %}>
+</div>
