@@ -1,30 +1,65 @@
 {% extends 'tests/base.html' %}
 {% load static %}
 {% block static %}
-    <link rel="stylesheet" href="{% static 'tests/css/tests_all.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'tests/css/tests_all.css' %}">
 {% endblock %}
 {% block content %}
 <div class="tests">
     <div class="panel">
         <div class="panel__search">
-            <form class="panel__search-form" method="get">
-                <input type="hidden" name="sort_by" value="{{ request.GET.sort_by }}">
-                <input class="panel__input span-input" type="text" name="q" autocomplete="off" placeholder="Поиск..." value="{{ request.GET.q }}">
-                <button type="submit" class="panel__search-button">
+            <form class="panel__search-form"
+                  method="get">
+                <input type="hidden"
+                       name="sort_by"
+                       value="{{ request.GET.sort_by }}">
+                <input class="panel__input span-input"
+                       type="text"
+                       name="q"
+                       autocomplete="off"
+                       placeholder="Поиск..."
+                       value="{{ request.GET.q }}">
+                <button type="submit"
+                        class="panel__search-button">
                 <i class="fas fa-search"></i>
             </button>
             </form>
         </div>
         <div class="panel__sort">
-            <form class="panel__sorting-form" id="sort-form" method="get">
-                <input type="hidden" name="q" value="{{ request.GET.q }}">
-                <input type="hidden" name="sort_by" id="sort-value">
+            <form class="panel__sorting-form"
+                  id="sort-form"
+                  method="get">
+                <input type="hidden"
+                       name="q"
+                       value="{{ request.GET.q }}">
+                <input type="hidden"
+                       name="sort_by"
+                       id="sort-value">
                 <div class="panel__custom-select">
-                    <div class="panel__custom-default-select"><span class="tests-panel__custom-select-text span-panel-text">По популярности</span></div>
+                    <div class="panel__custom-default-select">
+                        <span class="tests-panel__custom-select-text span-panel-text">
+                            По популярности
+                        </span>
+                    </div>
                     <div class="panel__select-items tests-panel__select-hide">
-                        <div class="panel__custom-select-item" data-value="newest"><span class="panel__custom-select-text span-panel-text">По новым</span></div>
-                        <div class="panel__custom-select-item" data-value="oldest"><span class="panel__custom-select-text span-panel-text">По старым</span></div>
-                        <div class="panel__custom-select-item" data-value="popular"><span class="panel__custom-select-text span-panel-text">По популярности</span></div>
+                        <div class="panel__custom-select-item"
+                             data-value="newest">
+                            <span class="panel__custom-select-text span-panel-text">
+                                По новым
+                            </span>
+                        </div>
+                        <div class="panel__custom-select-item"
+                             data-value="oldest">
+                            <span class="panel__custom-select-text span-panel-text">
+                                По старым
+                            </span>
+                        </div>
+                        <div class="panel__custom-select-item"
+                             data-value="popular">
+                            <span class="panel__custom-select-text span-panel-text">
+                                По популярности
+                            </span>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -32,15 +67,19 @@
     </div>
     <div class="tests-list">
     {% for test in tests %}
-        <a class="tests-list__test-title-link" href="{{ test.get_absolute_url }}">
+        <a class="tests-list__test-title-link"
+           href="{{ test.get_absolute_url }}">
         <div class="tests-list__test-container"
              data-rating="{{ test.rating }}"
              data-completion="{{ test.completion }}">
             <div class="tests-list__test-header">
-                    <span class="tests-list__test-title">{{ test.title }}</span>
+                <span class="tests-list__test-title">
+                    {{ test.title }}
+                </span>
             </div>
             <div class="tests-list__test-body">
-                <img src="{% static 'tests/images/test_image.jpg' %}" class="tests-list__test-image">
+                <img src="{% static 'tests/images/test_image.jpg' %}"
+                     class="tests-list__test-image">
             </div>
             <div class="tests-list__test-tags">
                 {% if test.tag.all %}
@@ -50,10 +89,22 @@
                 {% endif %}
             </div>
             <div class="tests-list__test-footer">
-                <span class="tests-list__test-info">{{ test.author }}</span>
-                <span class="tests-list__test-info">{{ test.completion }}<span class="test-review__icon-views"></span></span>
-                <span class="tests-list__test-info">{{ test.rating }}<span class="test-review__icon-star"></span></span>
-                <span class="tests-list__test-info">{{ test.time_update|date:"d. m. Y" }}</span>
+                <span class="tests-list__test-info">
+                    {{ test.author }}
+                </span>
+                <span class="tests-list__test-info">
+                    {{ test.completion }}
+                    <span class="test-review__icon-views">
+                    </span>
+                </span>
+                <span class="tests-list__test-info">
+                    {{ test.rating }}
+                    <span class="test-review__icon-star">
+                    </span>
+                </span>
+                <span class="tests-list__test-info">
+                    {{ test.time_update|date:"d. m. Y" }}
+                </span>
             </div>
         </div>
         </a>
@@ -63,7 +114,8 @@
     <div class="tests-pages">
         {% for p in paginator.page_range %}
             <div class="tests-pages_page-link-container">
-                <a class="tests-pages__page-link" href="?page={{ p }}">
+                <a class="tests-pages__page-link"
+                   href="?page={{ p }}">
                     {{ p }}
                 </a>
             </div>

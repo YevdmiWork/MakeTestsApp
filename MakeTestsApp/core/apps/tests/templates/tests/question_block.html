@@ -1,81 +1,97 @@
 {# tests/question_block.html #}
 <div class="questions-edit__question-block">
     <div class="questions-edit__question-block-header">
-        <span class="questions-edit__question-number span-text">{{ forloop.counter }}.</span>
+        <span class="questions-edit__question-number span-text">
+            {{ question_number }}.
+        </span>
         <input type="text"
                value="{{ question.text }}"
                data-question-id="{{ question.id }}"
                class="questions-edit__title-input span-text"
                autocomplete="off">
         <div class="questions-edit__panel">
-            <span class="questions-edit__panel-text span-text">* !</span>
+            <span class="questions-edit__panel-text span-text">
+                * !
+            </span>
         </div>
     </div>
-
     <div class="questions-edit__details">
         <div class="questions-edit__details-header">
             <div class="questions-edit__question-image-container">
                 {% if question.image %}
-                    <button class="questions-edit__delete-image-btn span-answer-input" data-question-id="{{ question.id }}">Удалить картинку</button>
-                    <img src="{{ question.image.url }}" alt="Image for question {{ question.id }}" class="questions-edit__question-image">
+                    <button class="questions-edit__delete-image-btn span-answer-input"
+                            data-question-id="{{ question.id }}">
+                        Удалить картинку
+                    </button>
+                    <img src="{{ question.image.url }}"
+                         alt="Image for question {{ question.id }}"
+                         class="questions-edit__question-image">
                 {% else %}
-                    <input type="file" class="image-input" data-question-id="{{ question.id }}" style="display: none;">
-                    <button class="questions-edit__add-image-btn span-answer-input" data-question-id="{{ question.id }}">Добавить картинку</button>
+                    <input type="file"
+                           class="image-input"
+                           data-question-id="{{ question.id }}"
+                           style="display: none;">
+                    <button class="questions-edit__add-image-btn span-answer-input"
+                            data-question-id="{{ question.id }}">
+                        Добавить картинку
+                    </button>
                 {% endif %}
             </div>
             <div class="questions-edit__question-title-textarea">
                 <textarea class="questions-edit__title-textarea span-input"
                           name="text"
-                          data-question-id="{{ question.id }}">{{ question.text }}
+                          data-question-id="{{ question.id }}">
+                    {{ question.text }}
                 </textarea>
             </div>
-
             <div class="questions-edit__details-panel">
                 <div class="questions-edit__details-select">
-                    <span class="questions-edit__details-text span-input">Тип ответов:</span>
-                    <select class="questions-edit__type-selector span-answer-input" data-question-id="{{ question.id }}">
+                    <span class="questions-edit__details-text span-input">
+                        Тип ответов:
+                    </span>
+                    <select class="questions-edit__type-selector span-answer-input"
+                            data-question-id="{{ question.id }}">
                         {% for choice in type_of_question_choices %}
-                            <option value="{{ choice.0 }}" {% if question.type == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                            <option value="{{ choice.0 }}" {% if question.type == choice.0 %}selected{% endif %}>
+                                {{ choice.1 }}
+                            </option>
                         {% endfor %}
                     </select>
                 </div>
             </div>
         </div>
-        <div class="questions-edit__answers-list">
-            <div class="questions-edit__answer-block" id="answer-{{ answer.id }}">
-            <div class="questions-edit__answer-counter">
-                <span class="questions-edit__answer-number span-answer-input">{{ counter }}.</span>
-            </div>
-            <input
-                type="text"
-                autocomplete="off"
-                value="{{ answer.text }}"
-                data-id="{{ answer.id }}"
-                class="questions-edit__answer-input span-answer-input"
-                placeholder="Ответ"
-            />
-            <input
-                type="checkbox"
-                {% if answer.answer_flag %} checked {% endif %}
-                data-id="{{ answer.id }}"
-                class="questions-edit__flag-checkbox"
-            />
-            <button class="questions-edit__answer-delete-btn red" data-id="{{ answer.id }}">X</button>
-        </div>
+        <div class="questions-edit__answers-list"
+             id="answers-container"
+             data-update-url="{% url 'tests:update_answer' %}">
+            <meta name="csrf-token"
+                  content="{{ csrf_token }}">
+            {% for answer in question.answers.all %}
+                {% include 'tests/answer_block.html' with answer=answer counter=forloop.counter %}
+            {% endfor %}
         </div>
         <div class="questions-edit__add-answer-container">
-            <form method="post" class="questions-edit__add-answer-form" data-question-id="{{ question.id }}">
+            <form method="post"
+                  class="questions-edit__add-answer-form"
+                  data-question-id="{{ question.id }}"
+                  data-add-url="{% url 'tests:add_answer' %}">
                 {% csrf_token %}
-                {{ add_answer_form.non_field_errors }}
-                <div class="questions-edit__add-answer-input">
-                    {{ add_answer_form.text }}
+                <input type="hidden"
+                       name="question_id"
+                       value="{{ question.id }}">
+                <div class="questions-edit__add-answer">
+                    <div class="questions-edit__add-answer-input">
+                        {{ add_answer_form.text }}
+                    </div>
+                    <div class="questions-edit__add-answer-flag">
+                        {{ add_answer_form.flag }}
+                    </div>
                 </div>
-                <div class="questions-edit__add-answer-flag">
-                    {{ add_answer_form.flag }}
-                </div>
-                <button class="questions-edit__add-answer-btn" data-question-id="{{ question.id }}">+</button>
+                <button type="submit"
+                        class="questions-edit__add-answer-btn"
+                        data-question-id="{{ question.id }}">
+                    +
+                </button>
             </form>
         </div>
-        <div class="questions-edit__error-container"></div>
     </div>
 </div>
