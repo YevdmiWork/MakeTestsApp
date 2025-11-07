@@ -50,14 +50,11 @@ class TestEditForm(forms.ModelForm):
 class AddQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ['text', 'type']
+        fields = ['text']
         widgets = {
             'text': forms.TextInput(attrs={
                 'class': 'questions-edit__add-question-form-input span-input',
                 'placeholder': 'Новый вопрос'
-            }),
-            'type': forms.Select(attrs={
-                'class': 'questions-edit__type-selector'
             }),
         }
 
@@ -72,3 +69,43 @@ class AnswerForm(forms.ModelForm):
                 'placeholder': 'Новый ответ'
             }),
         }
+
+
+class PostAnswersForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        questions = kwargs.pop('questions', [])
+        super().__init__(*args, **kwargs)
+
+        for question in questions:
+            answers = getattr(question, 'prefetched_answers', [])
+            field_name = f"question_{question.id}"
+
+            if question.type == 'SC':
+                self.fields[field_name] = forms.ChoiceField(
+                    choices=[(str(a.id), a.text) for a in answers],
+                    widget=forms.RadioSelect(attrs={
+                        'class': 'test-run__answer-radio'
+                    }),
+                    required=True,
+                    label=question.text,
+                )
+
+            elif question.type == 'MC':
+                self.fields[field_name] = forms.MultipleChoiceField(
+                    choices=[(str(a.id), a.text) for a in answers],
+                    widget=forms.CheckboxSelectMultiple(attrs={
+                        'class': 'test-run__answer-checkbox'
+                    }),
+                    required=False,
+                    label=question.text
+                )
+
+            elif question.type == 'TF':
+                self.fields[field_name] = forms.CharField(
+                    widget=forms.TextInput(attrs={
+                        'class': 'test-run__answer-text-field',
+                        'placeholder': 'Введите ответ',
+                    }),
+                    required=True,
+                    label=question.text,
+                )
