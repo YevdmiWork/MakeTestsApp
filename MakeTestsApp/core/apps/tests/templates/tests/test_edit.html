@@ -1,36 +1,41 @@
 {% extends 'tests/base.html' %}
 {% load static %}
 {% block static %}
-    <link rel="stylesheet" href="{% static 'tests/css/test_edit.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'tests/css/test_edit.css' %}">
     <script src="{% static 'tests/js/test_edit.js' %}"></script>
 {% endblock %}
+
 {% block content %}
-<div class="test-edit" data-test-id="{{ test.id }}" data-update-url="{% url 'tests:update_test_info' %}">
+<div class="test-edit"
+     data-test-id="{{ test.id }}"
+     data-update-url="{% url 'tests:update_test_info' %}">
     <div class="test-info-edit">
-        <form id="edit-test-form" method="post">
+        <form method="post">
             {% csrf_token %}
             <div class="test-info-edit__title">
                 {{ test_edit_form.title.errors }}
                 {{ test_edit_form.title }}
             </div>
-
             <div class="test-info-edit__content">
                 {{ test_edit_form.content.errors }}
                 {{ test_edit_form.content }}
             </div>
-
             <div class="test-info-edit__tags">
                 {% if test.tag.all %}
                     {% for tag in test.tag.all %}
                         <div class="test-info-edit__tag-block">
-                            <span class="test-info-edit__tags-text span-text">{{ tag.name }}</span>
+                            <span class="test-info-edit__tags-text span-text">
+                                {{ tag.name }}
+                            </span>
                         </div>
                     {% endfor %}
                 {% endif %}
-                <div class="test-info-edit__add-tag-btn"><span>+</span></div>
+                <div class="test-info-edit__add-tag-btn">
+                    +
+                </div>
             </div>
         </form>
-
         <div class="test-info-edit__data">
             <span class="test-info-edit__time">
                 Посл. изменение: {{ test.time_update|date:"d-m-Y H:i:s" }}
@@ -39,37 +44,43 @@
                 Автор: {{ test.author }}
             </span>
         </div>
-
         <div class="test-info-edit__status">
-            <form id="test-status-form" method="post">
+            <form method="post">
                 {% csrf_token %}
-                {{ test_status_form.non_field_errors }}
-                {{ test_status_form.status.errors }}
-                {{ test_status_form.status }}
-                <button type="submit" class="test-info-edit__publication-btn">Опубликовать</button>
+                <button type="submit" class="test-info-edit__publication-btn">
+                    Опубликовать
+                </button>
             </form>
-            <span class="test-info-edit__status-txt">Статус: {{ test.status }}</span>
+            <span class="test-info-edit__status-txt">
+                Статус: {{ test.status }}
+            </span>
         </div>
     </div>
-
     <div class="questions-edit">
-        <div class="questions-edit__questions-list">
+        <div class="questions-edit__questions-list"
+             id="questions-container"
+             data-update-answer-url="{% url 'tests:update_answer' %}">
             <div class="questions-edit__questions-list-scroll">
                 {% for question in questions %}
-                    {% include 'tests/question_block.html' with question=question question_number=forloop.counter %}
+                    {% include 'tests/question_block.html' with question=question question_number=forloop.counter add_answer_form=add_answer_form type_of_question_choices=type_of_question_choices %}
                 {% endfor %}
             </div>
         </div>
-
         <div class="questions-edit__add-question">
-            <form method="post" class="questions-edit__add-question-form" data-test-id="{{ test.id }}" data-url="{% url 'tests:add_question' %}">
+            <form method="post"
+                  class="questions-edit__add-question-form"
+                  data-test-id="{{ test.id }}"
+                  data-url="{% url 'tests:add_question' %}">
                 {% csrf_token %}
                 {{ add_question_form.non_field_errors }}
                 <div class="questions-edit__add-question-container">
                     {{ add_question_form.text }}
                     {{ add_question_form.type }}
-                    <button class="questions-edit__add-question-btn" type="submit">
-                        <span class="span-text">Добавить</span>
+                    <button class="questions-edit__add-question-btn"
+                            type="submit">
+                        <span class="span-text">
+                            Добавить
+                        </span>
                     </button>
                 </div>
             </form>

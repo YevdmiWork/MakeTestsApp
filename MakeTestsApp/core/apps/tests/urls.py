@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import AddTest, AllTests, TestView, TestEdit, TestRun, update_test_info, add_question
+from .views import AddTest, AllTests, TestView, TestEdit, TestRun, update_test_info, add_question, update_answer, \
+    add_answer
 
 app_name = "tests"
 
@@ -10,4 +11,6 @@ urlpatterns = [path('tests/', AllTests.as_view(), name='home'),
                path('tests/<slug:test_slug>/run/', TestRun.as_view(), name='test_run'),
                path('update-test-info/', update_test_info, name='update_test_info'),
                path('add-question/', add_question, name='add_question'),
+               path('update_answer/', update_answer, name='update_answer'),
+               path('add_answer/', add_answer, name='add_answer'),
                ]

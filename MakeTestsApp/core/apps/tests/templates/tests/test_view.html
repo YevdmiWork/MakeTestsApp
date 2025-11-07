@@ -1,27 +1,38 @@
 {% extends 'tests/base.html' %}
 {% load static %}
 {% block static %}
-    <link rel="stylesheet" href="{% static 'tests/css/test_view.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'tests/css/test_view.css' %}">
 {% endblock %}
 {% block content %}
 <div class="test-review">
     <div class="test-review__info">
         <div class="test-review__title">
-            <span class="test-review__title-span">{{ tests.title }}</span>
+            <span class="test-review__title-span">
+                {{ tests.title }}
+            </span>
         </div>
         <div class="test-review__main">
             <div class="test-review__content">
-                <img src="{% static 'tests/images/test_image.jpg' %}" class="test-review__test-image">
-                <span class="">
+                <img src="{% static 'tests/images/test_image.jpg' %}"
+                     class="test-review__test-image">
+                <span>
                     {{ tests.content }}
                 </span>
             </div>
             <div class="test-review__tags">
-
+                {% if tests.tag.all %}
+                    {% for tag in tests.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %},{% else %}.{% endif %}
+                    {% endfor %}
+                {% endif %}
             </div>
             <div class="test-review__follow-test-container">
                 <div class="test-review__follow-test-btn">
-                    <a class="test-review__follow-test-link" href="{{ tests.get_run_url }}"> К тесту</a>
+                    <a class="test-review__follow-test-link"
+                       href="{{ tests.get_run_url }}">
+                        К тесту
+                    </a>
                 </div>
             </div>
         </div>
@@ -40,7 +51,8 @@
                 </span>
             </span>
             <span class="test-review__icon-user test-review__footer-span">
-                <a class="test-review__author-link" href="{{ profile_url }}">
+                <a class="test-review__author-link"
+                   href="{{ profile_url }}">
                     {{ tests.author }}
                 </a>
             </span>
@@ -56,7 +68,8 @@
             <div class="test-review__similar-tests-list">
                 {% for test in similar_tests %}
                     <div class="test-review__similar-test-block">
-                        <a class="test-review__similar-test-title" href="{{ test.get_absolute_url }}">
+                        <a class="test-review__similar-test-title"
+                           href="{{ test.get_absolute_url }}">
                             {{ test.title }}
                         </a>
                         <div class="test-review__similar-test-tags">

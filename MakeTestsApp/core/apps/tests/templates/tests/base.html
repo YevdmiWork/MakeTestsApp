@@ -3,41 +3,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="{% static 'tests/css/styles.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'tests/css/styles.css' %}">
     {% block static %}
     {% endblock static %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap"
+          rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+          rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="header__menu-list">
             {% for item in menu %}
             <div class="header__menu">
-                <a class="header__menu-link" href="{% url item.url_name %}">
-                    <span class="header__menu-text">{{ item.title }}</span>
+                <a class="header__menu-link"
+                   href="{% url item.url_name %}">
+                    <span class="header__menu-text">
+                        {{ item.title }}
+                    </span>
                 </a>
             </div>
             {% endfor %}
             {% if profile_url %}
             <div class="header__menu header__menu_float-right">
-                <a class="header__menu-link header__menu-link_warns" href="{% url 'users:logout' %}">
-                    <span class="header__menu-logout header__menu-text">выйти</span>
+                <a class="header__menu-link header__menu-link_warns"
+                   href="{% url 'users:logout' %}">
+                    <span class="header__menu-logout header__menu-text">
+                        выйти
+                    </span>
                 </a>
-                <a class="header__username-link" href="{{ profile_url }}">
-                    <span class="header__menu-text"> {{user.username}} </span>
+                <a class="header__username-link"
+                   href="{{ profile_url }}">
+                    <span class="header__menu-text">
+                        {{user.username}}
+                    </span>
                 </a>
             </div>
             {% else %}
             <div class="header__menu header__menu_float-right">
-                    <a class="header__menu-link" href="{% url 'users:register' %}">
-                        <span class="header__menu-text">Регистрация</span>
+                    <a class="header__menu-link"
+                       href="{% url 'users:register' %}">
+                        <span class="header__menu-text">
+                            Регистрация
+                        </span>
                     </a>
-                    <a class="header__menu-link" href="{% url 'users:login' %}">
-                        <span class="header__menu-text">Войти</span>
+                    <a class="header__menu-link"
+                       href="{% url 'users:login' %}">
+                        <span class="header__menu-text">
+                            Войти
+                        </span>
                     </a>
             </div>
             {% endif %}
@@ -47,6 +67,5 @@
             {% block content %}{% endblock content %}
             {% block script %}{% endblock script %}
     </main>
-<script src="{% static 'tests/js/scripts.js' %}"></script>
 </body>
 </html>
