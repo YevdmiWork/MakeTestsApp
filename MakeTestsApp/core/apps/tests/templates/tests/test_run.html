@@ -1,30 +1,21 @@
 {% extends 'tests/base.html' %}
 {% load static %}
 {% block static %}
-    <link rel="stylesheet" href="{% static 'tests/css/test_run.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'tests/css/test_run.css' %}">
 {% endblock %}
 {% block content %}
-<div class="test-running">
-    <div class="test-running__progression">
-        <div>
-              {% for question in questions %}
-              <div class="question-block">
-                <p><strong>Вопрос {{forloop.counter}}</strong></p>
-              </div>
-            {% endfor %}
-        </div>
-        <div>
-            <span>Завершить</span>
-        </div>
-    </div>
-    <div class="test-running__questions-list">
-        <div class="test-running-container">
+<div class="test-run">
+    <div class="test-run__questions-list">
+        <div class="test-run-container">
         <form method="post">
             {% csrf_token %}
             {% for question, field in question_fields %}
-                <div class="test-running__question-block">
-                    <div class="test-running__question-title">
-                        <strong>Вопрос {{ forloop.counter }}: {{ field.label }}</strong>
+                <div class="test-run__question-block">
+                    <div class="test-run__question-title">
+                        <strong>
+                            Вопрос {{ forloop.counter }}: {{ question.question_text }}
+                        </strong>
                     </div>
                     {% if question.question_image %}
                     <div class="test__question-image-container">
@@ -33,13 +24,16 @@
                              alt="Изображение к вопросу">
                     </div>
                     {% endif %}
-                    <div class="test-running__answers-block">
-                    {{ field }}
+                    <div class="test-run__answers-block">
+                        {{ field }}
                     </div>
                 </div>
             {% endfor %}
             <div class="test-run__complete-test">
-                <button type="submit" class="test-run__complete-test-btn">Завершить тест</button>
+                <button type="submit"
+                        class="test-run__complete-test-btn">
+                    Завершить тест
+                </button>
             </div>
         </form>
         </div>
