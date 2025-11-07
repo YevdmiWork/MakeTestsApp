@@ -3,7 +3,8 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from .managers import TestQuerySet, PublishedTestManager, QuestionManager
+from .managers import PublishedTestManager, QuestionManager
+from .querysets import TestQuerySet
 
 
 class TestStatus(Enum):
@@ -19,7 +20,8 @@ class Tag(models.Model):
     name = models.CharField(
         max_length=24,
         unique=True,
-        verbose_name='Тег')
+        verbose_name='Тег'
+    )
 
     def __str__(self):
         return self.name
