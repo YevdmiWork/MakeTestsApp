@@ -3,42 +3,30 @@
 {% block static %}
     <link rel="stylesheet"
           href="{% static 'tests/css/tests_all.css' %}">
+    <script src="{% static 'tests/js/tests_all.js' %}"></script>
 {% endblock %}
 {% block content %}
 <div class="tests">
     <div class="panel">
-        <div class="panel__search">
-            <form class="panel__search-form"
-                  method="get">
-                <input type="hidden"
-                       name="sort_by"
-                       value="{{ request.GET.sort_by }}">
-                <input class="panel__input span-input"
-                       type="text"
-                       name="q"
-                       autocomplete="off"
-                       placeholder="Поиск..."
-                       value="{{ request.GET.q }}">
-                <button type="submit"
-                        class="panel__search-button">
-                <i class="fas fa-search"></i>
-            </button>
-            </form>
-        </div>
         <div class="panel__sort">
             <form class="panel__sorting-form"
-                  id="sort-form"
-                  method="get">
+                  id="sort-form" method="get">
                 <input type="hidden"
-                       name="q"
-                       value="{{ request.GET.q }}">
+                       name="q" value="{{ request.GET.q }}">
                 <input type="hidden"
                        name="sort_by"
-                       id="sort-value">
+                       id="sort-value"
+                       value="{{ request.GET.sort_by|default:'popular' }}">
                 <div class="panel__custom-select">
                     <div class="panel__custom-default-select">
                         <span class="tests-panel__custom-select-text span-panel-text">
-                            По популярности
+                            {% if request.GET.sort_by == 'newest' %}
+                                По новым
+                            {% elif request.GET.sort_by == 'oldest' %}
+                                По старым
+                            {% else %}
+                                По популярности
+                            {% endif %}
                         </span>
                     </div>
                     <div class="panel__select-items tests-panel__select-hide">
@@ -62,6 +50,24 @@
                         </div>
                     </div>
                 </div>
+            </form>
+        </div>
+        <div class="panel__search">
+            <form class="panel__search-form"
+                  method="get">
+                <input type="hidden"
+                       name="sort_by"
+                       value="{{ request.GET.sort_by }}">
+                <input class="panel__input span-input"
+                       type="text"
+                       name="q"
+                       autocomplete="off"
+                       placeholder="Поиск..."
+                       value="{{ request.GET.q }}">
+                <button type="submit"
+                        class="panel__search-button">
+                <i class="fas fa-search"></i>
+            </button>
             </form>
         </div>
     </div>
