@@ -13,7 +13,10 @@ class TestStatus(Enum):
 
     @classmethod
     def choices(cls):
-        return [(item.value, item.name) for item in cls]
+        return [
+            (cls.PUBLISHED.value, 'Опубликовано'),
+            (cls.UNPUBLISHED.value, 'Не опубликовано'),
+        ]
 
 
 class Tag(models.Model):
@@ -64,11 +67,9 @@ class Test(models.Model):
     author = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
-        related_name='author_tests',
+        related_name='tests',
         null=False,
         blank=False,
-        default=None,
-        db_index=True,
     )
 
     rating = models.IntegerField(
@@ -90,7 +91,6 @@ class Test(models.Model):
         choices=TestStatus.choices(),
         default=TestStatus.UNPUBLISHED.value,
         verbose_name='Статус',
-        db_index = True,
     )
 
     tag = models.ManyToManyField(
@@ -98,7 +98,6 @@ class Test(models.Model):
         related_name='tests',
         blank=True,
         verbose_name='Теги',
-        db_index = True,
     )
 
     objects = TestQuerySet.as_manager()
@@ -106,6 +105,10 @@ class Test(models.Model):
 
     class Meta:
         ordering = ['-completion']
+        indexes = [
+            models.Index(fields=['completion']),
+            models.Index(fields=['status', 'author']),
+        ]
 
     def __str__(self):
         return self.title
@@ -136,8 +139,7 @@ class Question(models.Model):
         'Test',
         on_delete=models.CASCADE,
         verbose_name="Связанный тест",
-        related_name='related_test',
-        db_index=True,
+        related_name='questions',
     )
 
     text = models.CharField(
@@ -178,7 +180,6 @@ class Answer(models.Model):
         on_delete=models.CASCADE,
         verbose_name="Связанный вопрос",
         related_name='answers',
-        db_index=True,
     )
 
     text = models.CharField(
@@ -191,7 +192,6 @@ class Answer(models.Model):
     flag = models.BooleanField(
         default=False,
         verbose_name='Правильный ответ',
-        db_index=True,
     )
 
     class Meta:

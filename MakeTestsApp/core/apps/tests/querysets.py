@@ -44,8 +44,9 @@ class TestQuerySet(models.QuerySet):
     def similar_to(self, test, limit=4):
         test_tags = test.tag.values_list('id', flat=True)
         return (
-            self.exclude(id=test.id)
-            .filter(tag__in=test_tags)
+            self.exclude(tag__isnull=False, id=test.id)
+            .filter(tag__isnull=False, tag__in=test_tags)
+            .distinct()
             .annotate(common_tags=Count('tag', filter=Q(tag__in=test_tags)))
             .order_by('-common_tags', '-completion')
             .select_related('author')
@@ -59,7 +60,6 @@ class TestQuerySet(models.QuerySet):
                 'author__username'
             )
             .prefetch_related('tag')
-            .distinct()[:limit]
         )
 
 
