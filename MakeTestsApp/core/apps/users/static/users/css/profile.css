@@ -197,3 +197,7 @@ th.desc::after {
     gap: 15px;
     padding: 0px 10px;
 }
+
+.profile__edit-test-link{
+    color: #999;
+}

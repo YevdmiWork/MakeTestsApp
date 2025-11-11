@@ -2,23 +2,42 @@
 {% load static %}
 {% block static %}
     <link rel="stylesheet" href="{% static 'users/css/profile.css' %}">
+    <script src="{% static 'users/js/profile.js' %}"></script>
 {% endblock %}
 {% block content %}
 <div class="profile">
     <div class="profile__info-container">
         <div class="profile__image-container">
-            <img src="{% static 'tests/images/test_image.jpg' %}" class="profile__image">
+            <img src="{% static 'tests/images/test_image.jpg' %}"
+                 class="profile__image">
         </div>
         <div class="profile__username">
-            <span class="profile__username-span">{{user.username}}</span>
-            <span class="profile__status-span">Статус: Нет ограничений</span>
+            <span class="profile__username-span">
+                {{user.username}}
+            </span>
+            <span class="profile__status-span">
+                Статус: Нет ограничений
+            </span>
         </div>
         <div class="profile__userinfo">
-            <span class="profile__userinfo-span">Логин: {{user.username}}</span>
-            <span class="profile__userinfo-span">Почта: {{user.email}}</span>
-            <span class="profile__userinfo-span">Пароль: <a href="{% url 'users:password_change' %}">изменить</a></span>
-            <span class="profile__userinfo-span">Зарегистрирован: {{ user.time_create|date:"d. m. Y" }}</span>
-            <span class="profile__userinfo-span">Последнее изменение: {{ user.time_update|date:"d. m. Y" }}</span>
+            <span class="profile__userinfo-span">
+                Логин: {{user.username}}
+            </span>
+            <span class="profile__userinfo-span">
+                Почта: {{user.email}}
+            </span>
+            <span class="profile__userinfo-span">
+                Пароль:
+                <a href="{% url 'users:password_change' %}">
+                    изменить
+                </a>
+            </span>
+            <span class="profile__userinfo-span">
+                Зарегистрирован: {{ user.time_create|date:"d. m. Y" }}
+            </span>
+            <span class="profile__userinfo-span">
+                Последнее изменение: {{ user.time_update|date:"d. m. Y" }}
+            </span>
         </div>
     </div>
     <div class="profile__activity">
@@ -26,44 +45,87 @@
             <table class="profile__table">
                 <thead class="profile__table-header">
                 <tr class="profile__table-row">
-                    <th class="profile__th-cell profile__th-cell--title" data-sort="title"><span class="profile__table-span">Название</span></th>
-                    <th class="profile__th-cell profile__th-cell--time_create" data-sort="time_create"><span class="profile__table-span">Дата создания</span></th>
-                    <th class="profile__th-cell profile__th-cell--rating" data-sort="rating"><span class="profile__table-span">Рейтинг</span></th>
-                    <th class="profile__th-cell profile__th-cell--completion" data-sort="completion"><span class="profile__table-span">Кол-во прохождений</span></th>
-                    <th class="profile__th-cell profile__th-cell--status" data-sort="status"><span class="profile__table-span">Статус</span></th>
+                    <th class="profile__th-cell profile__th-cell--title"
+                        data-sort="title">
+                        <span class="profile__table-span">
+                            Название
+                        </span>
+                    </th>
+                    <th class="profile__th-cell profile__th-cell--time_create"
+                        data-sort="time_create">
+                        <span class="profile__table-span">
+                            Дата создания
+                        </span>
+                    </th>
+                    <th class="profile__th-cell profile__th-cell--rating"
+                        data-sort="rating">
+                        <span class="profile__table-span">
+                            Рейтинг
+                        </span>
+                    </th>
+                    <th class="profile__th-cell profile__th-cell--completion"
+                        data-sort="completion">
+                        <span class="profile__table-span">
+                            Кол-во прохождений
+                        </span>
+                    </th>
+                    <th class="profile__th-cell profile__th-cell--status"
+                        data-sort="status">
+                        <span class="profile__table-span">
+                            Статус
+                        </span>
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="profile__table-body">
-                {% for t in tests %}
+                {% for test in tests %}
                 <tr class="profile__table-row">
                     <td class="profile__td-cell profile__table-cell--title">
-                        <a class="profile__td-cell--title-link" href="{{ t.get_absolute_url }}">
-                            {{t.title}}
-                            <a href="{{ t.get_edit_url }}">(Редактировать)</a>
+                        <a class="profile__td-cell--title-link"
+                           href="{{ test.get_absolute_url }}">
+                            {{test.title}}
+                            <a class="profile__edit-test-link"
+                               href="{{ test.get_edit_url }}">
+                                (Редактировать)
+                            </a>
                         </a>
                     </td>
                     <td class="profile__td-cell profile__table-cell--time_create">
-                        <span class="profile__table-span">{{ t.time_create|date:"d. m. Y" }}</span>
+                        <span class="profile__table-span">
+                            {{ test.time_create|date:"d. m. Y" }}
+                        </span>
                     </td>
                     <td class="profile__td-cell profile__table-cell--rating">
-                        <span class="profile__table-span">{{ t.rating }}</span>
+                        <span class="profile__table-span">
+                            {{ test.rating }}
+                        </span>
                         <span class="profile__icon profile__icon-star">&#9733;</span>
                     </td>
                     <td class="profile__td-cell profile__table-cell--completion">
-                        <span class="profile__table-span">{{ t.completion }}</span>
+                        <span class="profile__table-span">
+                            {{ test.completion }}
+                        </span>
                     </td>
                     <td class="profile__td-cell profile__table-cell--status">
-                        <span class="profile__table-span">{{ t.get_status_display }}</span>
-                        {% if t.test_status == 'published' %}
-                        <span class="profile__icon profile__icon-check">&#10003;</span>
+                        <span class="profile__table-span"
+                              data-status="{{ test.status }}">
+                            {{ test.get_status_display }}
+                        </span>
+                        {% if test.status == 'published' %}
+                            <span class="profile__icon profile__icon-check">&#10003;</span>
                         {% else %}
-                        <span class="profile__icon profile__icon-cross">&#10008;</span>
+                            <span class="profile__icon profile__icon-cross">&#10008;</span>
                         {% endif %}
                     </td>
                 </tr>
                 {% empty %}
                 <tr class="profile__table-row">
-                    <td class="profile__td-cell" colspan="5"><span class="profile__table-span">У вас пока нет тестов</span></td>
+                    <td class="profile__td-cell"
+                        colspan="5">
+                        <span class="profile__table-span">
+                            У вас пока нет тестов
+                        </span>
+                    </td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -71,6 +133,4 @@
         </div>
     </div>
 </div>
-<script>
-</script>
 {% endblock %}
