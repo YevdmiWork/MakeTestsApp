@@ -6,6 +6,26 @@
 {% endblock %}
 {% block content %}
 <div class="test-run">
+    <div class="test-run__test-info">
+        <div class="test-run__test-title">
+            {{ test.title }}
+        </div>
+        <span>
+            {{ test.content }}
+        </span>
+        <div class="test-run__test-tags">
+            {% if test.tag.all %}
+                Теги:
+                {% for tag in test.tag.all %}
+                    <div class="test-run__tag-block">
+                        {{ tag.name }}
+                    </div>
+                {% endfor %}
+            {% else %}
+                Тегов нет
+            {% endif %}
+        </div>
+    </div>
     <div class="test-run__questions-list">
         <div class="test-run-container">
         <form method="post">
@@ -14,13 +34,13 @@
                 <div class="test-run__question-block">
                     <div class="test-run__question-title">
                         <strong>
-                            Вопрос {{ forloop.counter }}: {{ question.question_text }}
+                            Вопрос {{ forloop.counter }}: {{ question.text }}
                         </strong>
                     </div>
-                    {% if question.question_image %}
+                    {% if question.image %}
                     <div class="test__question-image-container">
                         <img class="test__question-image"
-                             src="{{ question.question_image.url }}"
+                             src="{{ question.image.url }}"
                              alt="Изображение к вопросу">
                     </div>
                     {% endif %}

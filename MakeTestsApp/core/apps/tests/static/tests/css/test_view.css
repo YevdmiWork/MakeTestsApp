@@ -124,6 +124,7 @@
     padding-right: 10px;
     color: #526069;
     margin-bottom: 10px;
+    overflow-wrap: break-word;
 }
 
 .test-review__follow-test-container{
@@ -148,11 +149,6 @@
     background: #c19aff;
     cursor: pointer;
     filter: drop-shadow(0 0 2px #c19aff);
-}
-
-.test-review__author-link{
-    color: #562f73;
-    text-decoration: none;
 }
 
 .test-review__similar-tests-list{

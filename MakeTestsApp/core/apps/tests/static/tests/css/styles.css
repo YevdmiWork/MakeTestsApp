@@ -95,7 +95,7 @@ body {
     font-style: normal;
     font-weight: 400;
     text-align: center;
-    margin-right: 15px;
+    margin-right: 5px;
 }
 
 .profile__username-span{
@@ -252,27 +252,4 @@ main {
 
 .create-test-container__add-test-form{
     margin-bottom: 10px;
-}
-
-.tests-filters__sort-select{
-    border: 0px;
-    background: none;
-    color: purple;
-    border-bottom: 1px solid;
-}
-
-.tests-filters__sort-select:focus{
-    outline: none;
-}
-
-.tests{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.custom-select {
-    position: relative;
-    width: 200px;
-    font-family: Arial, sans-serif;
 }

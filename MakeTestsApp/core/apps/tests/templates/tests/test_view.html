@@ -9,7 +9,7 @@
     <div class="test-review__info">
         <div class="test-review__title">
             <span class="test-review__title-span">
-                {{ tests.title }}
+                {{ test.title }}
             </span>
         </div>
         <div class="test-review__main">
@@ -17,12 +17,13 @@
                 <img src="{% static 'tests/images/test_image.jpg' %}"
                      class="test-review__test-image">
                 <span>
-                    {{ tests.content }}
+                    {{ test.content }}
                 </span>
             </div>
             <div class="test-review__tags">
-                {% if tests.tag.all %}
-                    {% for tag in tests.tag.all %}
+                {% if test.tag.all %}
+                    Теги:
+                    {% for tag in test.tag.all %}
                         {{ tag.name }}{% if not forloop.last %},{% else %}.{% endif %}
                     {% endfor %}
                 {% endif %}
@@ -30,7 +31,7 @@
             <div class="test-review__follow-test-container">
                 <div class="test-review__follow-test-btn">
                     <a class="test-review__follow-test-link"
-                       href="{{ tests.get_run_url }}">
+                       href="{{ test.get_run_url }}">
                         К тесту
                     </a>
                 </div>
@@ -38,23 +39,20 @@
         </div>
         <div class="test-review__footer">
             <span class="test-review__footer-span">
-                {{ tests.time_update|date:"d. m. Y H:i" }}
+                {{ test.time_update|date:"d. m. Y H:i" }}
             </span>
             <span class="test-review__footer-span">
-                {{ tests.completion }}
+                {{ test.completion }}
                 <span class="test-review__icon-views">
                 </span>
             </span>
             <span class="test-review__footer-span">
-                {{ tests.rating }}
+                {{ test.rating }}
                 <span class="test-review__icon-star">
                 </span>
             </span>
             <span class="test-review__icon-user test-review__footer-span">
-                <a class="test-review__author-link"
-                   href="{{ profile_url }}">
-                    {{ tests.author }}
-                </a>
+                {{ test.author }}
             </span>
         </div>
     </div>
