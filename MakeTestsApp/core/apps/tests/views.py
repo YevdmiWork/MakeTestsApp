@@ -4,7 +4,6 @@ from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView
-
 from .forms import AddTestForm, TestEditForm, AddQuestionForm, AnswerForm, PostAnswersForm
 from .models import Test, Question, Answer
 from .services import create_test
@@ -15,12 +14,28 @@ class AllTests(ListView):
     context_object_name = "tests"
 
     def get_queryset(self):
-        return Test.published.all()
+        queryset = Test.published.all()
+        query = self.request.GET.get('q')
+
+        if query:
+            queryset = queryset.filter(title__icontains=query)
+
+        sort_by = self.request.GET.get('sort_by')
+        if sort_by == 'newest':
+            queryset = queryset.order_by('-time_create')
+        elif sort_by == 'oldest':
+            queryset = queryset.order_by('time_create')
+        elif sort_by == 'popular':
+            queryset = queryset.order_by('-completion')
+        else:
+            queryset = queryset.order_by('-completion')
+
+        return queryset
 
 
 class BaseTestView(DetailView):
     slug_url_kwarg = 'test_slug'
-    context_object_name = 'tests'
+    context_object_name = 'test'
 
 
 class TestView(BaseTestView):
@@ -41,7 +56,7 @@ class TestRun(BaseTestView):
     form_class = PostAnswersForm
 
     def get_queryset(self):
-        return Test.objects.with_fields()
+        return Test.objects.with_test_content().with_test_data()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -69,8 +84,6 @@ class AddTest(LoginRequiredMixin, CreateView):
 
 
 class TestEdit(BaseTestView):
-    model = Test
-    context_object_name = 'test'
     template_name = 'tests/test_edit.html'
 
     def get_queryset(self):
