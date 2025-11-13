@@ -7,7 +7,6 @@ class PublishedTestManager(models.Manager):
     def get_queryset(self):
         return (
             TestQuerySet(self.model, using=self._db)
-            .with_test_data()
             .published()
         )
 

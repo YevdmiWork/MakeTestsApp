@@ -5,31 +5,22 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView, CreateView
 from .forms import AddTestForm, TestEditForm, AddQuestionForm, AnswerForm, PostAnswersForm
+from .mixins import SortingMixin, SearchMixin
 from .models import Test, Question, Answer
 from .services import create_test
 
 
-class AllTests(ListView):
+class AllTests(SearchMixin, SortingMixin, ListView):
     template_name = "tests/tests_all.html"
     context_object_name = "tests"
 
+    def get_tests_queryset(self):
+        return Test.published.all().with_test_data()
+
     def get_queryset(self):
-        queryset = Test.published.all()
-        query = self.request.GET.get('q')
-
-        if query:
-            queryset = queryset.filter(title__icontains=query)
-
-        sort_by = self.request.GET.get('sort_by')
-        if sort_by == 'newest':
-            queryset = queryset.order_by('-time_create')
-        elif sort_by == 'oldest':
-            queryset = queryset.order_by('time_create')
-        elif sort_by == 'popular':
-            queryset = queryset.order_by('-completion')
-        else:
-            queryset = queryset.order_by('-completion')
-
+        queryset = self.get_tests_queryset()
+        queryset = self.filter_queryset(queryset)
+        queryset = self.sort_queryset(queryset)
         return queryset
 
 
