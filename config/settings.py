@@ -4,7 +4,7 @@ from pathlib import Path
 import environ
 import certifi
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
                   DEBUG=(bool, False),
@@ -61,10 +61,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'core.apps.tests.apps.TestsConfig',
-    'core.apps.users.apps.UsersConfig',
-    'core.services',
-    'storages',
+    'apps.tests.apps.TestsConfig',
+    'apps.users.apps.UsersConfig',
+    'services',
 ]
 
 MIDDLEWARE = [
