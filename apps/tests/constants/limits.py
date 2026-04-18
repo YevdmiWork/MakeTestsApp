@@ -1,0 +1,33 @@
+class Test:
+    TITLE_MAX_LENGTH = 50
+    TITLE_MIN_LENGTH = 5
+    CONTENT_MAX_LENGTH = 1500
+    SLUG_MAX_LENGTH = 32
+    STATUS_MAX_LENGTH = 30
+
+    MAX_TESTS_FOR_USER = 10
+    MAX_TEST_TAGS = 4
+    SIMILAR_TESTS_LIMIT = 4
+
+
+class Tag:
+    MAX_TITLE = 24
+
+
+class Rating:
+    MIN_VALUE = 0
+    MAX_VALUE = 5
+
+
+class Question:
+    TITLE_MAX_LENGTH = 350
+
+    MIN_ANSWERS_COUNT = 2
+    MIN_CORRECT_ANSWERS_COUNT = 1
+
+    TF_MIN_ANSWERS_COUNT = 1
+    SC_CORRECT_ANSWERS_COUNT = 1
+
+
+class Answer:
+    MAX_TITLE_LENGTH = 299
