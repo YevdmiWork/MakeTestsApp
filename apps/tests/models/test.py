@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 
 from .tag import Tag
 from ..constants import limits as const
+from ..querysets.test import TestQuerySet
 
 
 class TestStatus(models.TextChoices):
@@ -87,6 +88,8 @@ class Test(models.Model):
         blank=True,
         verbose_name='Теги',
     )
+
+    objects = TestQuerySet.as_manager()
 
     class Meta:
         ordering = ['-completion']
