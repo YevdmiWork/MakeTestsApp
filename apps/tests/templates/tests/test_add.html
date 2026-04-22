@@ -1,0 +1,103 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet"
+          href="{% static 'tests/css/test_edit.css' %}">
+    <link rel="stylesheet"
+          href="{% static 'tests/css/test_add.css' %}">
+{% endblock %}
+{% block content %}
+<div class="background-template">
+    <div class="test-edit">
+        <div class="test-info-edit">
+            <div class="test-info-edit__title">
+                <input
+                    type="text"
+                    class="test-info-edit__title-input span-title"
+                    placeholder="Введите название теста"
+                    disabled>
+            </div>
+            <div class="test-info-edit__content">
+                <textarea
+                    class="test-info-edit__content-textarea span-input"
+                    placeholder="Описание теста"
+                    disabled>
+                </textarea>
+            </div>
+            <div class="test-info-edit__tags-block">
+                <div class="test-info-edit__tags">
+                </div>
+                <div class="test-info-edit__add-tag-btn" style="opacity:.3; pointer-events:none;">
+                    +
+                </div>
+            </div>
+            <div class="test-info-edit__data">
+                <span class="test-info-edit__time">
+                    Посл. изменение:
+                </span>
+                <span class="test-info-edit__author">
+                    Автор:
+                </span>
+            </div>
+            <div class="test-info-edit__status">
+                <button class="test-info-edit__publication-btn" type="button" disabled>
+                    Опубликовать
+                </button>
+                <span class="test-info-edit__status-txt">
+                    Статус: черновик
+                </span>
+            </div>
+        </div>
+        <div class="questions-edit">
+            <div class="questions-edit__questions-list">
+                <div class="questions-edit__questions-list-scroll">
+                </div>
+            </div>
+            <div class="questions-edit__add-question">
+                <div class="questions-edit__add-question-form"
+                     style="pointer-events:none;">
+                    <div class="questions-edit__add-question-container">
+                        <input
+                            type="text"
+                            class="questions-edit__add-question-form-input span-input"
+                            placeholder="Новый вопрос"
+                            disabled>
+                        <button type="button" class="questions-edit__add-question-btn" disabled>
+                            <span class="span-text">Добавить</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="create-test-container">
+    <form class="create-test-container__add-test-form"
+          method="post">
+        {% csrf_token %}
+        {% for f in form %}
+        <div class="create-test-container__form-field">
+            {{ f }}
+        </div>
+        <div class="create-test-container__form-error">
+            {{ f.errors }}
+        </div>
+        {% endfor %}
+        <div class="create-test-container__submit-container">
+            <button class="create-test-container__submit-btn"
+                    type="submit">
+                <span class="span-input">
+                    Продолжить
+                </span>
+            </button>
+        </div>
+        {% if form.non_field_errors %}
+            <div class="create-test-container__form-error">
+                {% for error in form.non_field_errors %}
+                    <p class="create-test-container__errs">{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

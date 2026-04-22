@@ -1,6 +1,7 @@
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 from .tag import Tag
 from ..constants import limits as const
@@ -90,6 +91,9 @@ class Test(models.Model):
     )
 
     objects = TestQuerySet.as_manager()
+
+    def get_edit_url(self):
+        return reverse('pages:edit', kwargs={'test_slug': self.slug})
 
     class Meta:
         ordering = ['-completion']
