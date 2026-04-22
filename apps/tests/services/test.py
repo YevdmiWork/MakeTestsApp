@@ -3,6 +3,7 @@ from django.db import transaction
 
 from ..models import Test
 from ..validators.test import validate_test_limit, validate_test
+from ..constants import limits as const
 
 from apps.users.models import User
 
@@ -12,7 +13,7 @@ class SlugService:
     @transaction.atomic
     def generate_slug() -> str:
         while True:
-            slug = uuid.uuid4().hex[:TestConst.SLUG_MAX_LENGTH]
+            slug = uuid.uuid4().hex[:const.Test.SLUG_MAX_LENGTH]
             if not Test.objects.filter(slug=slug).exists():
                 return slug
 
