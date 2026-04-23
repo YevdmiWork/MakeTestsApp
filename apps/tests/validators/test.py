@@ -6,7 +6,7 @@ from ..constants import limits as const
 
 
 def validate_test_limit(user):
-    if Test.objects.filter(author=user).count() >= const.Test.MAX_TESTS_FOR_USER:
+    if Test.objects.filter(author=user).count() >= const.TestLimits.MAX_TESTS_FOR_USER:
         raise AppValidationError(['Лимит тестов'])
 
 
