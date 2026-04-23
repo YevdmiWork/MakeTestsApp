@@ -13,7 +13,7 @@ class SlugService:
     @transaction.atomic
     def generate_slug() -> str:
         while True:
-            slug = uuid.uuid4().hex[:const.Test.SLUG_MAX_LENGTH]
+            slug = uuid.uuid4().hex[:const.TestLimits.SLUG_MAX_LENGTH]
             if not Test.objects.filter(slug=slug).exists():
                 return slug
 

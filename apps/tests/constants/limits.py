@@ -1,4 +1,4 @@
-class Test:
+class TestLimits:
     TITLE_MAX_LENGTH = 50
     TITLE_MIN_LENGTH = 5
     CONTENT_MAX_LENGTH = 1500
@@ -10,16 +10,16 @@ class Test:
     SIMILAR_TESTS_LIMIT = 4
 
 
-class Tag:
+class TagLimits:
     MAX_TITLE = 24
 
 
-class Rating:
+class RatingLimits:
     MIN_VALUE = 0
     MAX_VALUE = 5
 
 
-class Question:
+class QuestionLimits:
     TITLE_MAX_LENGTH = 350
 
     MIN_ANSWERS_COUNT = 2
@@ -29,5 +29,5 @@ class Question:
     SC_CORRECT_ANSWERS_COUNT = 1
 
 
-class Answer:
+class AnswerLimits:
     MAX_TITLE_LENGTH = 299
