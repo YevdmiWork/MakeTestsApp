@@ -12,7 +12,7 @@ class Answer(models.Model):
     )
 
     text = models.CharField(
-        max_length=const.Answer.MAX_TITLE_LENGTH,
+        max_length=const.AnswerLimits.MAX_TITLE_LENGTH,
         verbose_name='Ответ',
         blank=False,
         null=False,

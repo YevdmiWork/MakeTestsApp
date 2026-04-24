@@ -18,7 +18,7 @@ class Question(models.Model):
     )
 
     text = models.CharField(
-        max_length=const.Question.TITLE_MAX_LENGTH,
+        max_length=const.QuestionLimits.TITLE_MAX_LENGTH,
         verbose_name='Вопрос',
         blank=False,
         null=False,

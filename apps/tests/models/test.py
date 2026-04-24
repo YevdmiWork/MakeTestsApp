@@ -15,14 +15,14 @@ class TestStatus(models.TextChoices):
 
 class Test(models.Model):
     title = models.CharField(
-        max_length=const.Test.TITLE_MAX_LENGTH,
+        max_length=const.TestLimits.TITLE_MAX_LENGTH,
         verbose_name='Название теста',
         blank=False,
         null=False,
     )
 
     content = models.CharField(
-        max_length=const.Test.CONTENT_MAX_LENGTH,
+        max_length=const.TestLimits.CONTENT_MAX_LENGTH,
         verbose_name='Описание',
         blank=True,
         null=False,
@@ -40,7 +40,7 @@ class Test(models.Model):
     )
 
     slug = models.CharField(
-        max_length=const.Test.SLUG_MAX_LENGTH,
+        max_length=const.TestLimits.SLUG_MAX_LENGTH,
         verbose_name='Альт.название',
         blank=False,
         null=False,
@@ -77,7 +77,7 @@ class Test(models.Model):
     )
 
     status = models.CharField(
-        max_length=const.Test.STATUS_MAX_LENGTH,
+        max_length=const.TestLimits.STATUS_MAX_LENGTH,
         choices=TestStatus.choices,
         default=TestStatus.UNPUBLISHED,
         verbose_name='Статус',
