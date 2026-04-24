@@ -4,9 +4,23 @@ from . import views
 app_name = 'users'
 
 auth_urlpatterns = [
+    path(
+        'register/',
+        views.RegisterUser.as_view(),
+        name='register',
+    ),
+    path(
+        'login/',
+        views.LoginUser.as_view(),
+        name='login',
+    ),
+    path(
+        'logout/',
+        views.LogoutUser.as_view(),
+        name='logout',
+    ),
 ]
 
 profile_urlpatterns = [
 ]
-
 urlpatterns = auth_urlpatterns + profile_urlpatterns
