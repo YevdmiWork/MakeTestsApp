@@ -6,7 +6,7 @@ from ..constants import limits as const
 
 class Tag(models.Model):
     name = models.CharField(
-        max_length=const.Tag.MAX_TITLE,
+        max_length=const.TagLimits.MAX_TITLE,
         unique=True,
         verbose_name='Тег',
     )
