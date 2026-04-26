@@ -3,14 +3,10 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
+from .choices import TestStatus
 from .tag import Tag
 from ..constants import limits as const
 from ..querysets.test import TestQuerySet
-
-
-class TestStatus(models.TextChoices):
-    PUBLISHED = 'published', 'Опубликовано'
-    UNPUBLISHED = 'unpublished', 'Не опубликовано'
 
 
 class Test(models.Model):

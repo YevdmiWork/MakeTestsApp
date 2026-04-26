@@ -5,7 +5,7 @@ from django.views.generic import ListView, CreateView
 
 from ..exceptions import AppValidationError, AppError
 from ..forms import AddTestForm
-from ..models import Test
+from ..models.test import Test
 from ..selectors.test import TestSelector
 from ..services.test import create_test
 

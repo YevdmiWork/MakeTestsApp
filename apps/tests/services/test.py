@@ -1,7 +1,7 @@
 import uuid
 from django.db import transaction
 
-from ..models import Test
+from ..models.test import Test
 from ..validators.test import validate_test_limit, validate_test
 from ..constants import limits as const
 

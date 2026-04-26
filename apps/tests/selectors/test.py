@@ -1,4 +1,4 @@
-from ..models import Test
+from ..models.test import Test
 
 
 class TestSelector:
