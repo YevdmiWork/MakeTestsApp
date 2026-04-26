@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Test
+from .models.test import Test
 
 
 class AddTestForm(forms.ModelForm):

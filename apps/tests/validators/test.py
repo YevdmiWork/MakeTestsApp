@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 
 from ..exceptions import AppValidationError
-from ..models import Test
+from ..models.test import Test
 from ..constants import limits as const
 
 
