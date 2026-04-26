@@ -22,5 +22,10 @@ auth_urlpatterns = [
 ]
 
 profile_urlpatterns = [
+    path(
+        'profile/<str:username>/',
+        views.ProfileUser.as_view(),
+        name='profile',
+    ),
 ]
 urlpatterns = auth_urlpatterns + profile_urlpatterns

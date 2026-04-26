@@ -20,3 +20,25 @@ class TestSelector:
                 'author__username',
             )
         )
+
+
+def for_profile(user, viewer):
+    qs = (
+        Test
+        .objects
+        .by_author(user)
+    )
+
+    if not viewer.is_authenticated or viewer != user:
+        qs = qs.published()
+
+    return qs.only(
+        'id',
+        'slug',
+        'time_create',
+        'title',
+        'rating_avg',
+        'completion',
+        'status',
+        'author_id',
+    )

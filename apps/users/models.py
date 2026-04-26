@@ -1,6 +1,7 @@
 import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.urls import reverse
 
 
 class User(AbstractUser):
@@ -15,3 +16,7 @@ class User(AbstractUser):
     time_update = models.DateTimeField(
         auto_now=True,
     )
+
+    def get_profile_url(self):
+        return reverse('users:profile', kwargs={'username': self.username})
+

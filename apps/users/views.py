@@ -1,10 +1,13 @@
 from django.contrib.auth.views import LogoutView, LoginView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, ListView
 
 from .forms import RegisterUserForm, LoginUserForm
+from .mixins import ProfileTestsMixin
 from .services import register_user
+
+from apps.tests.selectors.test import for_profile as tests_for_profile
 
 
 class RegisterUser(CreateView):
@@ -27,3 +30,14 @@ class LoginUser(LoginView):
 
 class LogoutUser(LogoutView):
     next_page = 'users:login'
+
+
+class ProfileUser(ProfileTestsMixin, ListView):
+    template_name = "users/profile.html"
+    context_object_name = 'tests'
+
+    def get_queryset(self):
+        return tests_for_profile(
+            user=self.profile_user,
+            viewer=self.request.user
+        )
