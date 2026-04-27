@@ -6,7 +6,7 @@ from django.views.generic import ListView, CreateView
 from ..exceptions import AppValidationError, AppError
 from ..forms import AddTestForm
 from ..models.test import Test
-from ..selectors.test import TestSelector
+from ..selectors.test import all_tests as get_all_tests
 from ..services.test import create_test
 
 
@@ -15,7 +15,7 @@ class AllTests(ListView):
     context_object_name = 'tests'
 
     def get_queryset(self):
-        return TestSelector.get_all_tests()
+        return get_all_tests()
 
 
 class AddTest(LoginRequiredMixin, CreateView):
