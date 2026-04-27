@@ -1,9 +1,9 @@
-from django.contrib.auth.views import LogoutView, LoginView
+from django.contrib.auth.views import LogoutView, LoginView, PasswordChangeView, PasswordChangeDoneView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView
 
-from .forms import RegisterUserForm, LoginUserForm
+from .forms import RegisterUserForm, LoginUserForm, UserPasswordChangeForm
 from .mixins import ProfileTestsMixin
 from .services import register_user
 
@@ -41,3 +41,13 @@ class ProfileUser(ProfileTestsMixin, ListView):
             user=self.profile_user,
             viewer=self.request.user
         )
+
+
+class UserPasswordChange(PasswordChangeView):
+    form_class = UserPasswordChangeForm
+    success_url = reverse_lazy('users:password_change_done')
+    template_name = 'users/password_change.html'
+
+
+class PasswordChangeDone(PasswordChangeDoneView):
+    template_name = 'users/password_change_done.html'
