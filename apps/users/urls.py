@@ -19,6 +19,16 @@ auth_urlpatterns = [
         views.LogoutUser.as_view(),
         name='logout',
     ),
+    path(
+        'password_change/',
+        views.UserPasswordChange.as_view(),
+        name='password_change',
+    ),
+    path(
+        'password_change/done/',
+        views.PasswordChangeDone.as_view(),
+        name='password_change_done',
+    ),
 ]
 
 profile_urlpatterns = [
