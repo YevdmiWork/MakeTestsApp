@@ -6,10 +6,11 @@ from django.views.generic import ListView, CreateView, DetailView
 from ..constants.limits import TestLimits
 from ..exceptions import AppValidationError, AppError
 from ..forms import AddTestForm, QuestionCreateForm, AnswerCreateForm, TestEditForm
+from ..mixins import PublishedTestMixin
 from ..models.tag import Tag
 from ..models.test import Test
 from ..selectors import test as test_selector
-from ..selectors.test import edit_test
+from ..selectors.test import edit_test, for_preview_test, similar_tests
 from ..services.test import create_test
 
 
@@ -66,4 +67,16 @@ class TestEdit(LoginRequiredMixin, BaseTestView):
             'available_tags': Tag.objects.exclude_for_test(self.object),
             'MAX_TEST_TAGS': TestLimits.MAX_TEST_TAGS,
         })
+        return context
+
+
+class TestPreview(PublishedTestMixin, BaseTestView):
+    template_name = 'tests/test_preview.html'
+
+    def get_queryset(self):
+        return for_preview_test()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['similar_tests'] = (similar_tests(test=self.object))
         return context

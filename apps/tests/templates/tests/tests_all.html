@@ -75,7 +75,7 @@
     <div class="tests-list">
     {% for test in tests %}
         <a class="tests-list__test-title-link"
-           href="{{ test.get_absolute_url }}">
+           href="{{ test.get_preview_url }}">
         <div class="tests-list__test-container"
              data-rating="{{ test.rating_avg }}"
              data-completion="{{ test.completion }}">

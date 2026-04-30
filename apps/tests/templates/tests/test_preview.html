@@ -1,0 +1,104 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet"
+          href="{% static 'tests/css/test_preview.css' %}">
+{% endblock %}
+{% block content %}
+<div class="test-review">
+    <div class="test-review__info">
+        <div class="test-review__title">
+            <span class="test-review__title-span">
+                {{ test.title }}
+            </span>
+        </div>
+        <div class="test-review__main">
+            <div class="test-review__content">
+                <img src="{% static 'tests/images/test_image.jpg' %}"
+                     class="test-review__test-image">
+                <span>
+                    {{ test.content }}
+                </span>
+            </div>
+            <div class="test-review__tags">
+                {% if test.tag.all %}
+                    Теги:
+                    {% for tag in test.tag.all %}
+                        {{ tag.name }}{% if not forloop.last %},{% else %}.{% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="test-review__follow-test-container">
+                <div class="test-review__follow-test-btn">
+                    <a class="test-review__follow-test-link"
+                       href="{{ test.get_run_url }}">
+                        К тесту
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="test-review__footer">
+            <span class="test-review__footer-span">
+                {{ test.time_update|date:"d. m. Y H:i" }}
+            </span>
+            <span class="test-review__footer-span">
+                {{ test.completion }}
+                <span class="test-review__icon-views">
+                </span>
+            </span>
+            <span class="test-review__footer-span">
+                {{ test.rating_avg }}
+                <span class="test-review__icon-star">
+                </span>
+                <span>({{ test.rating_count }}) оценок</span>
+            </span>
+            <span class="test-review__icon-user test-review__footer-span">
+                {{ test.author }}
+            </span>
+        </div>
+    </div>
+    <div class="test-review__similar-tests">
+        <div class="test-review__similar-tests-header">
+            <span>
+                Другие тесты
+            </span>
+        </div>
+        {% if similar_tests %}
+            <div class="test-review__similar-tests-list">
+                {% for test in similar_tests %}
+                    <div class="test-review__similar-test-block">
+                        <a class="test-review__similar-test-title"
+                           href="{{ test.get_preview_url }}">
+                            {{ test.title }}
+                        </a>
+                        <div class="test-review__similar-test-tags">
+                            {% for tag in test.tag.all %}
+                                <div class="test-review__similar-test-tag-block">
+                                    <span class="test-review__similar-test-tag-span">
+                                        {{ tag.name }}
+                                    </span>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="test-review__similar-test-info">
+                            <span class="test-review__icon-views">
+                                {{ test.completion }}
+                            </span>
+                            <span class="test-review__icon-star">
+                                {{ test.rating_avg }}
+                            </span>
+                            <span>
+                                {{ test.author.username }}
+                            </span>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <span class="test-review__similar-tests-empty-span">
+                Нет похожих тестов
+            </span>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
