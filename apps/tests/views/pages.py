@@ -10,8 +10,7 @@ from ..mixins import PublishedTestMixin
 from ..models.tag import Tag
 from ..models.test import Test
 from ..selectors import test as test_selector
-from ..selectors.test import edit_test, for_preview_test, similar_tests
-from ..services.test import create_test
+from ..services import test as test_services
 
 
 class AllTests(ListView):
@@ -30,7 +29,7 @@ class AddTest(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         try:
             with transaction.atomic():
-                self.object = create_test(
+                self.object = test_services.create_test(
                     user=self.request.user,
                     title=form.cleaned_data['title']
                 )
@@ -56,7 +55,7 @@ class TestEdit(LoginRequiredMixin, BaseTestView):
     template_name = 'tests/test_edit.html'
 
     def get_queryset(self):
-        return edit_test(user=self.request.user)
+        return test_selector.edit_test(user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -74,9 +73,9 @@ class TestPreview(PublishedTestMixin, BaseTestView):
     template_name = 'tests/test_preview.html'
 
     def get_queryset(self):
-        return for_preview_test()
+        return test_selector.for_preview_test()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['similar_tests'] = (similar_tests(test=self.object))
+        context['similar_tests'] = (test_selector.similar_tests(test=self.object))
         return context
