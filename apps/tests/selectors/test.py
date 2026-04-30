@@ -5,8 +5,8 @@ from ..models.question import Question
 from ..models.test import Test
 
 
-def all_tests():
-    return (
+def get_published():
+    qs = (
         Test.objects
         .published()
         .select_related('author')
@@ -22,9 +22,10 @@ def all_tests():
             'author__username',
         )
     )
+    return qs
 
 
-def for_profile(user, viewer):
+def get_for_profile(user, viewer):
     qs = (
         Test
         .objects
@@ -34,7 +35,7 @@ def for_profile(user, viewer):
     if not viewer.is_authenticated or viewer != user:
         qs = qs.published()
 
-    return qs.only(
+    qs = qs.only(
         'id',
         'slug',
         'time_create',
@@ -44,9 +45,10 @@ def for_profile(user, viewer):
         'status',
         'author_id',
     )
+    return qs
 
 
-def edit_test(user):
+def get_for_edit(user):
     qs = (
         Test.objects
         .by_author(user)
@@ -71,54 +73,51 @@ def edit_test(user):
             'author__username',
         )
     )
-
     return qs
 
 
-def for_preview_test():
+def get_preview():
     qs = (
         Test.objects
         .published()
         .select_related('author')
         .prefetch_related('tag')
+        .only(
+            'id',
+            'title',
+            'slug',
+            'completion',
+            'rating_avg',
+            'time_update',
+            'rating_count',
+            'status',
+            'content',
+            'author_id',
+            'author__username'
+        )
     )
-
-    return qs.only(
-        'id',
-        'title',
-        'slug',
-        'completion',
-        'rating_avg',
-        'time_update',
-        'rating_count',
-        'status',
-        'content',
-        'author_id',
-        'author__username'
-    )
+    return qs
 
 
-def similar_tests(test, limit=TestLimits.SIMILAR_TESTS_LIMIT):
+def get_similar(test, limit=TestLimits.SIMILAR_TESTS_LIMIT):
     qs = (
         Test.objects
         .published()
-        .filter(tag__in=test.tag.all())
-        .exclude(id=test.id)
-        .distinct()
+        .similar_to(test)
         .select_related('author')
         .prefetch_related('tag')
+        .only(
+            'id',
+            'title',
+            'slug',
+            'completion',
+            'rating_avg',
+            'time_update',
+            'rating_count',
+            'status',
+            'content',
+            'author_id',
+            'author__username'
+        )[:limit]
     )
-
-    return qs.only(
-        'id',
-        'title',
-        'slug',
-        'completion',
-        'rating_avg',
-        'time_update',
-        'rating_count',
-        'status',
-        'content',
-        'author_id',
-        'author__username'
-    )[:limit]
+    return qs

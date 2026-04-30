@@ -18,7 +18,7 @@ class AllTests(ListView):
     context_object_name = 'tests'
 
     def get_queryset(self):
-        return test_selector.all_tests()
+        return test_selector.get_published()
 
 
 class AddTest(LoginRequiredMixin, CreateView):
@@ -55,7 +55,7 @@ class TestEdit(LoginRequiredMixin, BaseTestView):
     template_name = 'tests/test_edit.html'
 
     def get_queryset(self):
-        return test_selector.edit_test(user=self.request.user)
+        return test_selector.get_for_edit(user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -73,9 +73,9 @@ class TestPreview(PublishedTestMixin, BaseTestView):
     template_name = 'tests/test_preview.html'
 
     def get_queryset(self):
-        return test_selector.for_preview_test()
+        return test_selector.get_preview()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['similar_tests'] = (test_selector.similar_tests(test=self.object))
+        context['similar_tests'] = test_selector.get_similar(test=self.object)
         return context
