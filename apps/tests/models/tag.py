@@ -2,6 +2,7 @@ from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 
 from ..constants import limits as const
+from ..querysets.tag import TagQuerySet
 
 
 class Tag(models.Model):
@@ -10,6 +11,8 @@ class Tag(models.Model):
         unique=True,
         verbose_name='Тег',
     )
+
+    objects = TagQuerySet.as_manager()
 
     def __str__(self):
         return self.name

@@ -15,4 +15,9 @@ urlpatterns = [
         pages.AddTest.as_view(),
         name='create',
     ),
+    path(
+        'tests/<slug:test_slug>/edit/',
+        pages.TestEdit.as_view(),
+        name='edit',
+    ),
 ]

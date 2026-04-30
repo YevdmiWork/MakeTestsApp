@@ -1,12 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
 from django.shortcuts import redirect
-from django.views.generic import ListView, CreateView
+from django.views.generic import ListView, CreateView, DetailView
 
+from ..constants.limits import TestLimits
 from ..exceptions import AppValidationError, AppError
-from ..forms import AddTestForm
+from ..forms import AddTestForm, QuestionCreateForm, AnswerCreateForm, TestEditForm
+from ..models.tag import Tag
 from ..models.test import Test
-from ..selectors.test import all_tests as get_all_tests
+from ..selectors import test as test_selector
+from ..selectors.test import edit_test
 from ..services.test import create_test
 
 
@@ -15,7 +18,7 @@ class AllTests(ListView):
     context_object_name = 'tests'
 
     def get_queryset(self):
-        return get_all_tests()
+        return test_selector.all_tests()
 
 
 class AddTest(LoginRequiredMixin, CreateView):
@@ -41,3 +44,26 @@ class AddTest(LoginRequiredMixin, CreateView):
             return self.form_invalid(form)
 
         return redirect(self.get_success_url())
+
+
+class BaseTestView(DetailView):
+    slug_url_kwarg = 'test_slug'
+    context_object_name = 'test'
+
+
+class TestEdit(LoginRequiredMixin, BaseTestView):
+    template_name = 'tests/test_edit.html'
+
+    def get_queryset(self):
+        return edit_test(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'test_edit_form': TestEditForm(instance=self.object),
+            'add_question_form': QuestionCreateForm(),
+            'add_answer_form': AnswerCreateForm(),
+            'available_tags': Tag.objects.exclude_for_test(self.object),
+            'MAX_TEST_TAGS': TestLimits.MAX_TEST_TAGS,
+        })
+        return context
