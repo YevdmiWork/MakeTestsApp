@@ -7,7 +7,7 @@ from .forms import RegisterUserForm, LoginUserForm, UserPasswordChangeForm
 from .mixins import ProfileTestsMixin
 from .services import register_user
 
-from apps.tests.selectors.test import for_profile as tests_for_profile
+from apps.tests.selectors import test as test_selector
 
 
 class RegisterUser(CreateView):
@@ -37,7 +37,7 @@ class ProfileUser(ProfileTestsMixin, ListView):
     context_object_name = 'tests'
 
     def get_queryset(self):
-        return tests_for_profile(
+        return test_selector.get_for_profile(
             user=self.profile_user,
             viewer=self.request.user
         )
