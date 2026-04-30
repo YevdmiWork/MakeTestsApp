@@ -88,6 +88,9 @@ class Test(models.Model):
 
     objects = TestQuerySet.as_manager()
 
+    def get_preview_url(self):
+        return reverse('pages:preview', kwargs={'test_slug': self.slug})
+
     def get_edit_url(self):
         return reverse('pages:edit', kwargs={'test_slug': self.slug})
 
