@@ -1,3 +1,6 @@
+from django.db.models import Prefetch
+
+from ..models.question import Question
 from ..models.test import Test
 
 
@@ -40,3 +43,32 @@ def for_profile(user, viewer):
         'status',
         'author_id',
     )
+
+
+def edit_test(user):
+    qs = (
+        Test.objects
+        .by_author(user)
+        .select_related('author')
+        .prefetch_related(
+            'tag',
+            Prefetch(
+                'questions',
+                queryset=Question.objects.prefetch_related('answers'),
+            )
+        )
+        .only(
+            'id',
+            'title',
+            'time_update',
+            'slug',
+            'author_id',
+            'rating_avg',
+            'completion',
+            'content',
+            'status',
+            'author__username',
+        )
+    )
+
+    return qs

@@ -1,0 +1,31 @@
+{# templates/tests/answer_block.html #}
+<div class="questions-edit__answer-block"
+     id="answer-{{ answer.id }}"
+     data-update-text-url="{% url 'api:update_answer_text' answer.id %}"
+     data-update-flag-url="{% url 'api:update_answer_flag' answer.id %}"
+     data-delete-url="{% url 'api:delete_answer' answer.id %}">
+    <div class="questions-edit__answer-counter">
+        <span class="questions-edit__answer-number span-answer-input">
+            {{ counter }}.
+        </span>
+    </div>
+    <input type="text"
+           name="answer-input"
+           class="questions-edit__answer-input span-answer-input"
+           data-answer-id="{{ answer.id }}"
+           value="{{ answer.text|escape }}"
+           placeholder="Ответ">
+    <input type="checkbox"
+           name="flag"
+           class="questions-edit__answer-flag"
+           data-answer-id="{{ answer.id }}"
+           {% if answer.flag %}checked{% endif %}>
+    <div>
+        <button type="button"
+                class="questions-edit__answer-delete"
+                data-answer-id="{{ answer.id }}"
+                title="Удалить ответ">
+            X
+        </button>
+    </div>
+</div>
