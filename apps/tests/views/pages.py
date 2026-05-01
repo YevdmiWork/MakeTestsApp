@@ -4,6 +4,7 @@ from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, DetailView
 
 from ..constants.limits import TestLimits
+from ..constants.search import SEARCH_PARAM
 from ..exceptions import AppValidationError, AppError
 from ..forms import AddTestForm, QuestionCreateForm, AnswerCreateForm, TestEditForm
 from ..mixins import PublishedTestMixin
@@ -18,7 +19,9 @@ class AllTests(ListView):
     context_object_name = 'tests'
 
     def get_queryset(self):
-        return test_selector.get_published()
+        qs = test_selector.get_published()
+        query = (self.request.GET.get(SEARCH_PARAM) or '').strip()
+        return qs.search(query) if query else qs
 
 
 class AddTest(LoginRequiredMixin, CreateView):
