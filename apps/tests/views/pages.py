@@ -17,11 +17,36 @@ from ..services import test as test_services
 class AllTests(ListView):
     template_name = 'tests/tests_all.html'
     context_object_name = 'tests'
+    sort_param = 'sort_by'
+    default_sort = 'popular'
+    sort_map = {
+        'newest': '-time_update',
+        'oldest': 'time_update',
+        'popular': '-completion',
+    }
+
+    def get_tests_queryset(self):
+        return test_selector.get_published()
+
+    def get_current_sort(self):
+        sort = self.request.GET.get(self.sort_param)
+        return self.sort_map.get(sort, self.sort_map[self.default_sort])
+
+    def apply_sort(self, qs):
+        sort = self.get_current_sort()
+        return qs.order_by(sort)
+
+    def apply_search(self, qs):
+        query = (self.request.GET.get(SEARCH_PARAM) or '').strip()
+        if query:
+            qs = qs.search(query)
+        return qs
 
     def get_queryset(self):
-        qs = test_selector.get_published()
-        query = (self.request.GET.get(SEARCH_PARAM) or '').strip()
-        return qs.search(query) if query else qs
+        qs = self.get_tests_queryset()
+        qs = self.apply_search(qs)
+        qs = self.apply_sort(qs)
+        return qs
 
 
 class AddTest(LoginRequiredMixin, CreateView):
