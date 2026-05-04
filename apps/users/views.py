@@ -7,7 +7,7 @@ from .forms import RegisterUserForm, LoginUserForm, UserPasswordChangeForm
 from .mixins import ProfileTestsMixin
 from .services import register_user
 
-from apps.tests.selectors import test as test_selector
+from apps.tests.query_selectors import test as test_selector
 
 
 class RegisterUser(CreateView):

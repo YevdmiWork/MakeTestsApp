@@ -10,7 +10,7 @@ from ..forms import AddTestForm, QuestionCreateForm, AnswerCreateForm, TestEditF
 from ..mixins import PublishedTestMixin
 from ..models.tag import Tag
 from ..models.test import Test
-from ..selectors import test as test_selector
+from ..query_selectors import test as test_selector
 from ..services import test as test_services
 
 
