@@ -42,6 +42,17 @@ class ProfileUser(ProfileTestsMixin, ListView):
             viewer=self.request.user
         )
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request_user = self.request.user
+        profile_user = self.profile_user
+        context['profile_user'] = profile_user
+        context['profile_owner'] = (
+                request_user.is_authenticated and
+                request_user.pk == profile_user.pk
+        )
+        return context
+
 
 class UserPasswordChange(PasswordChangeView):
     form_class = UserPasswordChangeForm

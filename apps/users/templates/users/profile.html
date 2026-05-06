@@ -13,31 +13,35 @@
         </div>
         <div class="profile__username">
             <span class="profile__username-span">
-                {{user.username}}
+                {{profile_user.username}}
             </span>
-            <span class="profile__status-span">
-                Статус: Нет ограничений
-            </span>
+                <span class="profile__status-span">
+                    Статус: Нет ограничений
+                </span>
         </div>
         <div class="profile__userinfo">
             <span class="profile__userinfo-span">
-                Логин: {{user.username}}
+                Логин: {{ profile_user.username }}
             </span>
+            {% if profile_owner %}
+                <span class="profile__userinfo-span">
+                    Почта: {{ profile_user.email }}
+                </span>
+                <span class="profile__userinfo-span">
+                    Пароль:
+                    <a class="profile__password-change"
+                       href="{% url 'users:password_change' %}">
+                        изменить
+                    </a>
+                </span>
+                <span class="profile__userinfo-span">
+                    Последнее изменение:
+                    {{ profile_user.time_update|date:"d. m. Y" }}
+                </span>
+            {% endif %}
             <span class="profile__userinfo-span">
-                Почта: {{user.email}}
-            </span>
-            <span class="profile__userinfo-span">
-                Пароль:
-                <a class="profile__password-change"
-                   href="{% url 'users:password_change' %}">
-                    изменить
-                </a>
-            </span>
-            <span class="profile__userinfo-span">
-                Зарегистрирован: {{ user.time_create|date:"d. m. Y" }}
-            </span>
-            <span class="profile__userinfo-span">
-                Последнее изменение: {{ user.time_update|date:"d. m. Y" }}
+                Зарегистрирован:
+                {{ profile_user.time_create|date:"d. m. Y" }}
             </span>
         </div>
     </div>
@@ -82,14 +86,22 @@
                 {% for test in tests %}
                 <tr class="profile__table-row">
                     <td class="profile__td-cell profile__table-cell--title">
-                        <a class="profile__td-cell--title-link"
-                           href="{{ test.get_preview_url }}">
-                            {{test.title}}
+                        {% if test.status == 'published' %}
+                            <a class="profile__td-cell--title-link"
+                               href="{{ test.get_preview_url }}">
+                                {{ test.title }}
+                            </a>
+                        {% else %}
+                            <span class="profile__td-cell--title-link disabled">
+                                {{ test.title }}
+                            </span>
+                        {% endif %}
+                        {% if profile_owner %}
                             <a class="profile__edit-test-link"
                                href="{{ test.get_edit_url }}">
                                 (Редактировать)
                             </a>
-                        </a>
+                        {% endif %}
                     </td>
                     <td class="profile__td-cell profile__table-cell--time_create">
                         <span class="profile__table-span">
@@ -124,7 +136,7 @@
                     <td class="profile__td-cell"
                         colspan="5">
                         <span class="profile__table-span">
-                            У вас пока нет тестов
+                            Тесты отсутствуют
                         </span>
                     </td>
                 </tr>
