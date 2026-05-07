@@ -1,7 +1,6 @@
 from django.contrib.auth.views import LogoutView, LoginView, PasswordChangeView, PasswordChangeDoneView
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import FormView, ListView
 
 from .forms import RegisterUserForm, LoginUserForm, UserPasswordChangeForm
 from .mixins import ProfileTestsMixin
@@ -10,14 +9,14 @@ from .services import register_user
 from apps.tests.query_selectors import test as test_selector
 
 
-class RegisterUser(CreateView):
+class RegisterUser(FormView):
     form_class = RegisterUserForm
     template_name = 'users/registration.html'
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('pages:home')
 
     def form_valid(self, form):
-        self.object = register_user(self.request, form)
-        return redirect('pages:home')
+        register_user(self.request, form)
+        return super().form_valid(form)
 
 
 class LoginUser(LoginView):
