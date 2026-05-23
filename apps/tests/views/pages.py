@@ -6,7 +6,7 @@ from django.views.generic import ListView, CreateView, DetailView
 from ..constants.limits import TestLimits
 from ..constants.search import SEARCH_PARAM
 from ..exceptions import AppValidationError, AppError
-from ..forms import AddTestForm, QuestionCreateForm, AnswerCreateForm, TestEditForm
+from ..forms import AddTestForm, QuestionCreateForm, AnswerCreateForm, TestTitleForm, TestContentForm
 from ..mixins import PublishedTestMixin
 from ..models.tag import Tag
 from ..models.test import Test
@@ -88,7 +88,8 @@ class TestEdit(LoginRequiredMixin, BaseTestView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'test_edit_form': TestEditForm(instance=self.object),
+            'title_form': TestTitleForm(instance=self.object),
+            'content_form': TestContentForm(instance=self.object),
             'add_question_form': QuestionCreateForm(),
             'add_answer_form': AnswerCreateForm(),
             'available_tags': Tag.objects.exclude_for_test(self.object),

@@ -20,16 +20,11 @@ class AddTestForm(forms.ModelForm):
         }
 
 
-class TestEditForm(forms.ModelForm):
+class TestContentForm(forms.ModelForm):
     class Meta:
         model = Test
-        fields = ['title', 'content']
+        fields = ['content']
         widgets = {
-            'title': forms.TextInput(attrs={
-                'class': 'test-info-edit__title-input span-title',
-                'autocomplete': 'off',
-                'placeholder': 'Введите название теста'
-            }),
             'content': forms.Textarea(attrs={
                 'class': 'test-info-edit__content-textarea span-input',
                 'placeholder': 'Описание теста'
@@ -38,7 +33,20 @@ class TestEditForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['title'].required = False
+        self.fields['content'].required = False
+
+
+class TestTitleForm(forms.ModelForm):
+    class Meta:
+        model = Test
+        fields = ['title']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'test-info-edit__title-input span-title',
+                'autocomplete': 'off',
+                'placeholder': 'Введите название теста'
+            }),
+        }
 
 
 class QuestionCreateForm(forms.ModelForm):
