@@ -2,14 +2,19 @@ class AppError(Exception):
     code = 'app_error'
     status_code = 400
 
-    def __init__(self, message=None):
+    def __init__(self, message=None, details=None):
         self.message = message or self.code
+        self.details = details or {}
         super().__init__(self.message)
 
     def to_dict(self):
         return {
-            'error': self.code,
-            'message': self.message
+            'success': False,
+            'error': {
+                'code': self.code,
+                'message': self.message,
+                'details': self.details
+            }
         }
 
 
@@ -18,30 +23,25 @@ class AppValidationError(AppError):
     status_code = 400
 
     def __init__(self, errors: list[str]):
-        self.errors = errors
-        super().__init__('Validation failed')
-
-    def to_dict(self):
-        return {
-            'error': self.code,
-            'errors': self.errors
-        }
+        super().__init__(
+            message='Validation failed',
+            details={
+                'errors': errors
+            }
+        )
 
 
 class PublishValidationError(AppError):
     code = 'publish_validation_error'
     status_code = 400
 
-    def __init__(self, errors):
-        self.errors = errors
-        super().__init__('Publish validation failed')
-
-    def to_dict(self):
-        return {
-            'error': self.code,
-            'errors': self.errors
-        }
-
+    def __init__(self, errors: list[str]):
+        super().__init__(
+            message='Publish validation failed',
+            details={
+                'errors': errors
+            }
+        )
 
 class BadRequest(AppError):
     code = 'bad_request'
@@ -56,3 +56,8 @@ class NotFoundError(AppError):
 class AccessDeniedError(AppError):
     code = 'access_denied'
     status_code = 403
+
+
+class ConflictError(AppError):
+    code = 'conflict_error'
+    status_code = 409
