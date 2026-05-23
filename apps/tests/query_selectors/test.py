@@ -1,4 +1,5 @@
-from django.db.models import Prefetch, Count, Q, Exists, OuterRef
+from django.db.models import Prefetch
+from django.shortcuts import get_object_or_404
 
 from ..constants.limits import TestLimits
 from ..models.question import Question
@@ -121,3 +122,10 @@ def get_similar(test, limit=TestLimits.SIMILAR_TESTS_LIMIT):
         )[:limit]
     )
     return qs
+
+
+def get_test_or_404(test_id, user):
+    return get_object_or_404(
+        Test.objects.by_author(user),
+        id=test_id
+    )
