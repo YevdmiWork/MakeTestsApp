@@ -1,6 +1,7 @@
-from apps.tests.constants.search import SEARCH_PARAM
-from apps.tests.views.pages import AllTests
 from unittest.mock import Mock
+
+from ..constants.search import SEARCH_PARAM
+from ..views.pages import AllTests
 
 
 def test_invalid_sort(rf):

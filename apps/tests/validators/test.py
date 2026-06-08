@@ -21,7 +21,7 @@ def validate_test(test: Test) -> None:
 
 
 def validate_test_title(title: str | None):
-    if not title:
+    if title is None:
         return
 
     title = title.strip()
