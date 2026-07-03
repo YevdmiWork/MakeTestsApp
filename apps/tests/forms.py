@@ -71,3 +71,7 @@ class AnswerCreateForm(forms.ModelForm):
                 'placeholder': 'Новый ответ'
             }),
         }
+
+
+class TagForm(forms.Form):
+    tag_id = forms.IntegerField()

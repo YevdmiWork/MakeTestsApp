@@ -41,6 +41,8 @@
             </div>
             <div class="test-info-edit__tags-block"
                  data-test-id="{{ test.id }}"
+                 data-add-tag-url="{% url 'api:add_tag' test.id %}"
+                 data-remove-tag-url="{% url 'api:remove_tag' test.id %}"
                  data-max-tags="{{ MAX_TEST_TAGS }}">
                 <div id="tagErrors"
                      class="test-info-edit__tag-errors">
