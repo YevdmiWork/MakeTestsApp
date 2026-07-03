@@ -14,17 +14,11 @@ def test_update_content(test, user):
         content=new_content,
     )
 
+    assert result is test
+
     test.refresh_from_db()
 
     assert test.content == new_content
-
-    assert result == {
-        'test': {
-            'id': test.id,
-            'title': test.title,
-            'content': new_content,
-        }
-    }
 
 
 @pytest.mark.django_db
@@ -37,17 +31,11 @@ def test_update_title(test, user):
         title=new_title,
     )
 
+    assert result is test
+
     test.refresh_from_db()
 
     assert test.title == new_title
-
-    assert result == {
-        'test': {
-            'id': test.id,
-            'title': new_title,
-            'content': test.content,
-        }
-    }
 
 
 @pytest.mark.django_db
@@ -62,18 +50,12 @@ def test_none_values(test, user):
         user=user,
     )
 
+    assert result is test
+
     test.refresh_from_db()
 
     assert test.title == old_title
     assert test.content == old_content
-
-    assert result == {
-        'test': {
-            'id': test.id,
-            'title': old_title,
-            'content': old_content,
-        }
-    }
 
 
 @pytest.mark.django_db
