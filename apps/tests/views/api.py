@@ -1,4 +1,4 @@
-from .serializers import serialize_tag
+from .serializers import serialize_tag, serialize_test
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequest
 from ..forms import TestTitleForm, TestContentForm, TagForm
@@ -31,19 +31,17 @@ def update_test_info(request, test_id):
         form = form_class(request.POST)
 
         if not form.is_valid():
-            errors = [
-                e["message"]
-                for field_errors in form.errors.get_json_data().values()
-                for e in field_errors
-            ]
+            raise_form_error(form)
 
-            raise AppValidationError(errors)
-
-        return update_test(
+        test = update_test(
             test=test,
             user=request.user,
-            **form.cleaned_data
+            **form.cleaned_data,
         )
+
+        return {
+            'test': serialize_test(test),
+        }
 
     raise BadRequest('Expected one of: title, content')
 

@@ -19,10 +19,14 @@ class SlugService:
                 return slug
 
 
-def create_test(*, user: User, title: str) -> Test:
+def create_test(
+    *,
+    user: User,
+    title: str
+) -> Test:
     title = (title or '').strip()
 
-    test_validators.validate_test_limit(user)
+    test_validators.validate_test_limit(user=user)
 
     test = Test(
         author=user,
@@ -30,7 +34,7 @@ def create_test(*, user: User, title: str) -> Test:
         slug=SlugService.generate_slug(),
     )
 
-    test_validators.validate_test(test)
+    test_validators.validate_test(test=test)
 
     test.save()
     return test
@@ -42,8 +46,8 @@ def update_test(
     test: Test,
     title: str | None = None,
     content: str | None = None,
-    user: User
-) -> dict:
+    user: User,
+) -> Test:
 
     check_test_author(test=test, user=user)
     check_test_not_published(test=test)
@@ -67,10 +71,4 @@ def update_test(
     if update_fields:
         test.save(update_fields=update_fields)
 
-    return {
-        'test': {
-            'id': test.id,
-            'title': test.title,
-            'content': test.content,
-        }
-    }
+    return test
