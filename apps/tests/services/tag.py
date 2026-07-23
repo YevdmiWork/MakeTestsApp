@@ -20,13 +20,13 @@ def add_tag_to_test(
     check_test_author(test=test, user=user)
     check_test_not_published(test=test)
 
-    tag = tag_get_by_id(tag_id=tag_id)
-
     test_validators.validate_tag_limit(test=test)
     test_validators.validate_tag_exists(
         test=test,
         tag_id=tag_id
     )
+
+    tag = tag_get_by_id(tag_id=tag_id)
 
     test.tag.add(tag)
 
