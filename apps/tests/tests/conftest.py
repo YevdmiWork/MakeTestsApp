@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 
+from apps.tests.models.tag import Tag
 from apps.tests.models.test import Test
 
 
@@ -19,4 +20,11 @@ def test(user):
         content='Test content',
         slug='test-slug',
         author=user,
+    )
+
+
+@pytest.fixture
+def tag(db):
+    return Tag.objects.create(
+        name='IQ',
     )
