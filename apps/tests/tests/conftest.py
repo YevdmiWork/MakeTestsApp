@@ -28,3 +28,10 @@ def tag(db):
     return Tag.objects.create(
         name='IQ',
     )
+
+
+@pytest.fixture
+def tag_factory(db):
+    def factory(name):
+        return Tag.objects.create(name=name)
+    return factory
