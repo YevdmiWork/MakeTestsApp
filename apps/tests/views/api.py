@@ -3,8 +3,8 @@ from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequest
 from ..forms import TestTitleForm, TestContentForm, TagForm
 from ..query_selectors.test import get_test_or_404
-from ..services.tag import test_add_tag, test_remove_tag
-from ..services.test import update_test
+from ..services import tag as tag_service
+from ..services import test as test_service
 
 
 TEST_INFO_FIELDS = {
@@ -33,7 +33,7 @@ def update_test_info(request, test_id):
         if not form.is_valid():
             raise_form_error(form)
 
-        test = update_test(
+        test = test_service.update_test(
             test=test,
             user=request.user,
             **form.cleaned_data,
@@ -54,7 +54,7 @@ def add_tag(request, test_id):
     if not form.is_valid():
         raise_form_error(form)
 
-    tag = test_add_tag(
+    tag = tag_service.add_tag_to_test(
         test=test,
         user=request.user,
         tag_id=form.cleaned_data['tag_id'],
@@ -73,7 +73,7 @@ def remove_tag(request, test_id):
     if not form.is_valid():
         raise_form_error(form)
 
-    tag = test_remove_tag(
+    tag = tag_service.remove_tag_from_test(
         test=test,
         user=request.user,
         tag_id=form.cleaned_data['tag_id'],

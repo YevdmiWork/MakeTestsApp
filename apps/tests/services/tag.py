@@ -10,7 +10,7 @@ from apps.users.models import User
 
 
 @transaction.atomic
-def test_add_tag(
+def add_tag_to_test(
     *,
     test: Test,
     user: User,
@@ -34,7 +34,7 @@ def test_add_tag(
 
 
 @transaction.atomic
-def test_remove_tag(
+def remove_tag_from_test(
     *,
     test: Test,
     user: User,
