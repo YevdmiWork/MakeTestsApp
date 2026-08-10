@@ -26,7 +26,10 @@ def raise_form_error(form):
 
 @post_api
 def update_test_info(request, test_id):
-    test = get_test_or_404(test_id, request.user)
+    test = get_test_or_404(
+        test_id=test_id,
+        user=request.user,
+    )
 
     for field_name, form_class in TEST_INFO_FIELDS.items():
         if field_name not in request.POST:
@@ -52,7 +55,10 @@ def update_test_info(request, test_id):
 
 @post_api
 def add_tag(request, test_id):
-    test = get_test_or_404(test_id, request.user)
+    test = get_test_or_404(
+        test_id=test_id,
+        user=request.user,
+    )
 
     form = TagForm(request.POST)
     if not form.is_valid():
@@ -71,7 +77,10 @@ def add_tag(request, test_id):
 
 @post_api
 def remove_tag(request, test_id):
-    test = get_test_or_404(test_id, request.user)
+    test = get_test_or_404(
+        test_id=test_id,
+        user=request.user,
+    )
 
     form = TagForm(request.POST)
     if not form.is_valid():
