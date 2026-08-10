@@ -1,3 +1,4 @@
+from ..models.question import Question
 from ..models.tag import Tag
 from ..models.test import Test
 
@@ -14,4 +15,10 @@ def serialize_tag(tag: Tag) -> dict:
     return {
         'id': tag.id,
         'name': tag.name,
+    }
+
+
+def serialize_question(question: Question) -> dict:
+    return {
+        'id': question.id,
     }

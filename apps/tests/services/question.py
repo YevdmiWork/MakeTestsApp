@@ -1,0 +1,68 @@
+from django.db import transaction
+from django.http import HttpRequest
+from django.template.loader import render_to_string
+
+from ..forms import AnswerCreateForm
+from ..models.question import Question
+from ..models.test import Test
+from ..permissions import check_test_author, check_test_not_published
+
+from ..constants import limits as const
+from ..validators import question as question_validators
+
+from apps.users.models import User
+
+
+@transaction.atomic
+def create_question(
+    *,
+    test: Test,
+    user: User,
+    text: str,
+) -> Question:
+
+    check_test_author(test=test, user=user)
+    check_test_not_published(test=test)
+
+    question_validators.validate_question_text(
+        text=text,
+        max_length=const.QuestionLimits.TITLE_MAX_LENGTH,
+    )
+
+    question = Question(
+        test=test,
+        text=text,
+    )
+
+    question.save()
+    return question
+
+
+@transaction.atomic
+def delete_question(
+    *,
+    question: Question,
+    user: User,
+) -> None:
+
+    check_test_author(test=question.test,user=user)
+    check_test_not_published(test=question.test)
+
+    question.delete()
+
+
+def render_question(
+    question: Question,
+    test: Test,
+    request: HttpRequest,
+) -> str:
+    return render_to_string(
+        'tests/question_block.html',
+        {
+            'question': question,
+            'question_number': test.questions.count(),
+            'add_answer_form': AnswerCreateForm(),
+            'type_choices': Question.QuestionType.choices,
+        },
+        request=request,
+    )

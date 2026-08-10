@@ -101,8 +101,8 @@
         <div class="questions-edit__questions-list"
              id="questions-container">
             <div class="questions-edit__questions-list-scroll">
-                {% for question in questions %}
-
+                {% for question in test.questions.all %}
+                    {% include 'tests/question_block.html' with question=question question_number=forloop.counter add_answer_form=add_answer_form type_choices=type_choices %}
                 {% endfor %}
             </div>
         </div>
@@ -110,7 +110,7 @@
             <form method="post"
                   class="questions-edit__add-question-form"
                   data-test-id="{{ test.id }}"
-                  >
+                  data-url="{% url 'api:add_question' test.id %}">
                 {% csrf_token %}
                 {{ add_question_form.non_field_errors }}
                 <div class="questions-edit__add-question-container">

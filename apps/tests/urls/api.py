@@ -21,4 +21,15 @@ urlpatterns = [
         api.remove_tag,
         name='remove_tag',
     ),
+
+    path(
+        'question/<int:test_id>/add/',
+        api.add_question,
+        name='add_question',
+    ),
+    path(
+        'question/<int:question_id>/delete/',
+        api.delete_question,
+        name='delete_question'
+    ),
 ]

@@ -1,10 +1,14 @@
-from .serializers import serialize_tag, serialize_test
+from .serializers import serialize_tag, serialize_test, serialize_question
+
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequest
-from ..forms import TestTitleForm, TestContentForm, TagForm
+from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionCreateForm
+from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
+
 from ..services import tag as tag_service
 from ..services import test as test_service
+from ..services import question as question_service
 
 
 TEST_INFO_FIELDS = {
@@ -81,4 +85,48 @@ def remove_tag(request, test_id):
 
     return {
         'tag': serialize_tag(tag),
+    }
+
+
+@post_api
+def add_question(request, test_id):
+    test = get_test_or_404(
+        test_id=test_id,
+        user=request.user,
+    )
+
+    form = QuestionCreateForm(request.POST)
+    if not form.is_valid():
+        raise_form_error(form)
+
+    question = question_service.create_question(
+        test=test,
+        user=request.user,
+        text=form.cleaned_data['text'],
+    )
+
+    return {
+        'question': serialize_question(question),
+        'html': question_service.render_question(
+            question,
+            request=request,
+            test=test,
+        ),
+    }
+
+
+@post_api
+def delete_question(request, question_id):
+    question = get_question_or_404(
+        question_id=question_id,
+        user=request.user,
+    )
+
+    question_service.delete_question(
+        question=question,
+        user=request.user,
+    )
+
+    return {
+        'question_id': question_id,
     }

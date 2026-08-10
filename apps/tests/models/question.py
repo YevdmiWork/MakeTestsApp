@@ -1,5 +1,7 @@
 from django.db import models
 
+from ..querysets.question import QuestionQuerySet
+
 from ..constants import limits as const
 
 
@@ -36,6 +38,8 @@ class Question(models.Model):
         default=QuestionType.SINGLE_CHOICE,
         verbose_name='Тип вопроса',
     )
+
+    objects = QuestionQuerySet.as_manager()
 
     class Meta:
         ordering = ['id']
