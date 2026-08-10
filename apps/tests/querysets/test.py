@@ -9,7 +9,6 @@ from ..models.tag import Tag
 
 
 class TestQuerySet(models.QuerySet):
-
     def published(self):
         return self.filter(status=TestStatus.PUBLISHED)
 
