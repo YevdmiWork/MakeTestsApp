@@ -5,8 +5,10 @@ from django.urls import reverse
 
 from .choices import TestStatus
 from .tag import Tag
-from ..constants import limits as const
+
 from ..querysets.test import TestQuerySet
+
+from ..constants import limits as const
 
 
 class Test(models.Model):

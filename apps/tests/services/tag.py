@@ -2,9 +2,10 @@ from django.db import transaction
 
 from ..models.tag import Tag
 from ..models.test import Test
-from ..validators import tag as test_validators
 from ..permissions import check_test_author, check_test_not_published
 from ..query_selectors.tag import tag_get_by_id
+
+from ..validators import tag as test_validators
 
 from apps.users.models import User
 

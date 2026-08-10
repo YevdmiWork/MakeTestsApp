@@ -1,8 +1,9 @@
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 
-from ..constants import limits as const
 from ..querysets.tag import TagQuerySet
+
+from ..constants import limits as const
 
 
 class Tag(models.Model):
