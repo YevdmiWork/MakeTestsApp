@@ -8,6 +8,7 @@ from ..constants.search import SEARCH_PARAM
 from ..exceptions import AppValidationError, AppError
 from ..forms import AddTestForm, QuestionCreateForm, AnswerCreateForm, TestTitleForm, TestContentForm
 from ..mixins import PublishedTestMixin
+from ..models.question import Question
 from ..models.tag import Tag
 from ..models.test import Test
 from ..query_selectors import test as test_selector
@@ -94,6 +95,7 @@ class TestEdit(LoginRequiredMixin, BaseTestView):
             'add_answer_form': AnswerCreateForm(),
             'available_tags': Tag.objects.exclude_for_test(self.object),
             'MAX_TEST_TAGS': TestLimits.MAX_TEST_TAGS,
+            'type_choices': Question.QuestionType.choices,
         })
         return context
 

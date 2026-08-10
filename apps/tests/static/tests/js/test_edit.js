@@ -237,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await safeJsonFetch(response);
             form.reset();
-            questionsList.insertAdjacentHTML('beforeend', data.html);
+            questionsList.insertAdjacentHTML('beforeend', data.data.html);
 
             questionsList.querySelectorAll('.questions-edit__question-number')
                 .forEach((el, i) => el.textContent = (i + 1) + '.');
@@ -415,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const response = await post(addTagUrl, { tag_id: tagId });
 
-            renderTag(response.data);
+            renderTag(response.data.tag);
             hideDropdownTag(tagId);
             dropdown.classList.remove("active");
 
