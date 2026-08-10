@@ -13,8 +13,6 @@ def test_add_tag_to_test(test, user, tag):
 
     assert result == tag
 
-    test.refresh_from_db()
-
     assert test.tag.filter(id=tag.id).exists()
 
 
@@ -29,7 +27,5 @@ def test_remove_tag_from_test(test, user, tag):
     )
 
     assert result == tag
-
-    test.refresh_from_db()
 
     assert not test.tag.filter(id=tag.id).exists()
