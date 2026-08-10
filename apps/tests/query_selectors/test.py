@@ -7,6 +7,7 @@ from ..models.test import Test
 
 from apps.users.models import User
 
+
 def get_published():
     qs = (
         Test.objects
