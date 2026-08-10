@@ -5,6 +5,7 @@ from ..constants.limits import TestLimits
 from ..models.question import Question
 from ..models.test import Test
 
+from apps.users.models import User
 
 def get_published():
     qs = (
@@ -124,7 +125,11 @@ def get_similar(test, limit=TestLimits.SIMILAR_TESTS_LIMIT):
     return qs
 
 
-def get_test_or_404(test_id, user):
+def get_test_or_404(
+    *,
+    test_id: int,
+    user: User,
+) -> Test:
     return get_object_or_404(
         Test.objects.by_author(user),
         id=test_id
