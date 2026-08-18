@@ -28,6 +28,7 @@ def create_test(
     title = (title or '').strip()
 
     test_validators.validate_test_limit(user=user)
+    test_validators.validate_test_title(title=title)
 
     test = Test(
         author=user,
