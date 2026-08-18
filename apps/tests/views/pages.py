@@ -65,7 +65,7 @@ class AddTest(LoginRequiredMixin, CreateView):
                 )
 
         except AppValidationError as e:
-            for err in e.errors:
+            for err in e.details['errors']:
                 form.add_error(None, err)
             return self.form_invalid(form)
 
