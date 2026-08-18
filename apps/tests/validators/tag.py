@@ -1,11 +1,12 @@
 from ..constants.limits import TestLimits
-from ..exceptions import BadRequest
+from ..constants.messages import TagMessages
+from ..exceptions import BadRequestError
 from ..models.test import Test
 
 
 def validate_tag_limit(*, test: Test) -> None:
     if test.tag.count() >= TestLimits.MAX_TEST_TAGS:
-        raise BadRequest('Лимит тегов')
+        raise BadRequestError(TagMessages.TAG_LIMIT)
 
 
 def validate_tag_exists(
@@ -14,7 +15,7 @@ def validate_tag_exists(
     tag_id: int
 ) -> None:
     if test.tag.filter(id=tag_id).exists():
-        raise BadRequest('Тег уже добавлен')
+        raise BadRequestError(TagMessages.ALREADY_ADDED)
 
 
 def validate_tag_not_exists(
@@ -23,4 +24,4 @@ def validate_tag_not_exists(
     tag_id: int,
 ) -> None:
     if not test.tag.filter(id=tag_id).exists():
-        raise BadRequest('Тег не найден')
+        raise BadRequestError(TagMessages.NOT_FOUND)

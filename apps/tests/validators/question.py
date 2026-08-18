@@ -10,7 +10,7 @@ def validate_question_text(
     text = text.strip()
 
     if not text:
-        raise AppValidationError(QuestionMessages.EMPTY_TEXT)
+        raise AppValidationError([QuestionMessages.EMPTY_TEXT])
 
     if len(text) > max_length:
         raise AppValidationError([

@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 
 from ..constants.limits import TestLimits
+from ..constants.messages import TestMessages
 from ..exceptions import AppValidationError
 from ..models.test import Test
 
@@ -9,7 +10,7 @@ from apps.users.models import User
 
 def validate_test_limit(*, user: User) -> None:
     if Test.objects.filter(author=user).count() >= TestLimits.MAX_TESTS_FOR_USER:
-        raise AppValidationError(['Лимит тестов'])
+        raise AppValidationError([TestMessages.TEST_LIMIT])
 
 
 def validate_test(*, test: Test) -> None:

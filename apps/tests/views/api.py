@@ -1,7 +1,7 @@
 from .serializers import serialize_tag, serialize_test, serialize_question
 
 from ..decorators import post_api
-from ..exceptions import AppValidationError, BadRequest
+from ..exceptions import AppValidationError, BadRequestError
 from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionCreateForm
 from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
@@ -50,7 +50,7 @@ def update_test_info(request, test_id):
             'test': serialize_test(test),
         }
 
-    raise BadRequest('Expected one of: title, content')
+    raise BadRequestError('Expected one of: title, content')
 
 
 @post_api

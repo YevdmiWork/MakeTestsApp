@@ -1,7 +1,7 @@
 import pytest
 
 from ..constants.limits import TestLimits
-from ..exceptions import BadRequest
+from ..exceptions import BadRequestError
 from ..validators.tag import (
     validate_tag_limit,
     validate_tag_exists,
@@ -19,7 +19,7 @@ class TestValidateTagLimit:
         for i in range(TestLimits.MAX_TEST_TAGS):
             test.tag.add(tag_factory(name=f'tag-{i}'))
 
-        with pytest.raises(BadRequest):
+        with pytest.raises(BadRequestError):
             validate_tag_limit(test=test)
 
 
@@ -33,7 +33,7 @@ class TestValidateTagExists:
     def test_tag_already_added(self, test, tag):
         test.tag.add(tag)
 
-        with pytest.raises(BadRequest):
+        with pytest.raises(BadRequestError):
             validate_tag_exists(
                 test=test,
                 tag_id=tag.id,
@@ -42,7 +42,7 @@ class TestValidateTagExists:
 
 class TestValidateTagNotExists:
     def test_tag_not_added(self, test, tag):
-        with pytest.raises(BadRequest):
+        with pytest.raises(BadRequestError):
             validate_tag_not_exists(
                 test=test,
                 tag_id=tag.id,

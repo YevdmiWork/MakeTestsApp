@@ -43,7 +43,7 @@ class PublishValidationError(AppError):
             }
         )
 
-class BadRequest(AppError):
+class BadRequestError(AppError):
     code = 'bad_request'
     status_code = 400
 
