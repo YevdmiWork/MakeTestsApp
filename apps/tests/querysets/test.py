@@ -20,8 +20,8 @@ class TestQuerySet(models.QuerySet):
             self.exclude(id=test.id)
             .annotate(
                 common_tags=Count(
-                    'tag',
-                    filter=Q(tag__in=test.tag.all()),
+                    'tags',
+                    filter=Q(tags__in=test.tags.all()),
                     distinct=True
                 )
             )

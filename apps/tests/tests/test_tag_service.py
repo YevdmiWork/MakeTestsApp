@@ -13,12 +13,12 @@ def test_add_tag_to_test(test, user, tag):
 
     assert result == tag
 
-    assert test.tag.filter(id=tag.id).exists()
+    assert test.tags.filter(id=tag.id).exists()
 
 
 @pytest.mark.django_db
 def test_remove_tag_from_test(test, user, tag):
-    test.tag.add(tag)
+    test.tags.add(tag)
 
     result = tag_service.remove_tag_from_test(
         test=test,
@@ -28,4 +28,4 @@ def test_remove_tag_from_test(test, user, tag):
 
     assert result == tag
 
-    assert not test.tag.filter(id=tag.id).exists()
+    assert not test.tags.filter(id=tag.id).exists()

@@ -89,8 +89,8 @@
                      class="tests-list__test-image">
             </div>
             <div class="tests-list__test-tags">
-                {% if test.tag.all %}
-                    {% for tag in test.tag.all %}
+                {% if test.tags.all %}
+                    {% for tag in test.tags.all %}
                         {{ tag.name }}
                     {% endfor %}
                 {% endif %}

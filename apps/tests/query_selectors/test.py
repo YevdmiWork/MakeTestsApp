@@ -13,7 +13,7 @@ def get_published():
         Test.objects
         .published()
         .select_related('author')
-        .prefetch_related('tag')
+        .prefetch_related('tags')
         .only(
             'id',
             'title',
@@ -57,7 +57,7 @@ def get_for_edit(user):
         .by_author(user)
         .select_related('author')
         .prefetch_related(
-            'tag',
+            'tags',
             Prefetch(
                 'questions',
                 queryset=Question.objects.prefetch_related('answers'),
@@ -84,7 +84,7 @@ def get_preview():
         Test.objects
         .published()
         .select_related('author')
-        .prefetch_related('tag')
+        .prefetch_related('tags')
         .only(
             'id',
             'title',
@@ -108,7 +108,7 @@ def get_similar(test, limit=TestLimits.SIMILAR_TESTS_LIMIT):
         .published()
         .similar_to(test)
         .select_related('author')
-        .prefetch_related('tag')
+        .prefetch_related('tags')
         .only(
             'id',
             'title',

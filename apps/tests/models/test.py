@@ -81,7 +81,7 @@ class Test(models.Model):
         verbose_name='Статус',
     )
 
-    tag = models.ManyToManyField(
+    tags = models.ManyToManyField(
         Tag,
         related_name='tests',
         blank=True,
