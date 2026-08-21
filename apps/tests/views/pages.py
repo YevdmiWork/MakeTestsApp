@@ -73,7 +73,7 @@ class AddTest(LoginRequiredMixin, CreateView):
             form.add_error(None, e.message)
             return self.form_invalid(form)
 
-        return redirect(self.get_success_url())
+        return redirect(self.object.get_edit_url())
 
 
 class BaseTestView(DetailView):
