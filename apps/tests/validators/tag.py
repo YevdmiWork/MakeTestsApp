@@ -5,7 +5,7 @@ from ..models.test import Test
 
 
 def validate_tag_limit(*, test: Test) -> None:
-    if test.tag.count() >= TestLimits.MAX_TEST_TAGS:
+    if test.tags.count() >= TestLimits.MAX_TEST_TAGS:
         raise BadRequestError(TagMessages.TAG_LIMIT)
 
 
@@ -14,7 +14,7 @@ def validate_tag_exists(
     test: Test,
     tag_id: int
 ) -> None:
-    if test.tag.filter(id=tag_id).exists():
+    if test.tags.filter(id=tag_id).exists():
         raise BadRequestError(TagMessages.ALREADY_ADDED)
 
 
@@ -23,5 +23,5 @@ def validate_tag_not_exists(
     test: Test,
     tag_id: int,
 ) -> None:
-    if not test.tag.filter(id=tag_id).exists():
+    if not test.tags.filter(id=tag_id).exists():
         raise BadRequestError(TagMessages.NOT_FOUND)

@@ -21,9 +21,9 @@
                 </span>
             </div>
             <div class="test-review__tags">
-                {% if test.tag.all %}
+                {% if test.tags.all %}
                     Теги:
-                    {% for tag in test.tag.all %}
+                    {% for tag in test.tags.all %}
                         {{ tag.name }}{% if not forloop.last %},{% else %}.{% endif %}
                     {% endfor %}
                 {% endif %}
@@ -72,7 +72,7 @@
                             {{ test.title }}
                         </a>
                         <div class="test-review__similar-test-tags">
-                            {% for tag in test.tag.all %}
+                            {% for tag in test.tags.all %}
                                 <div class="test-review__similar-test-tag-block">
                                     <span class="test-review__similar-test-tag-span">
                                         {{ tag.name }}

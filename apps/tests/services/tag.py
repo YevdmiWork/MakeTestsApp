@@ -29,7 +29,7 @@ def add_tag_to_test(
 
     tag = tag_get_by_id(tag_id=tag_id)
 
-    test.tag.add(tag)
+    test.tags.add(tag)
 
     return tag
 
@@ -52,7 +52,7 @@ def remove_tag_from_test(
 
     tag = tag_get_by_id(tag_id=tag_id)
 
-    test.tag.remove(tag)
+    test.tags.remove(tag)
 
     return tag
 
