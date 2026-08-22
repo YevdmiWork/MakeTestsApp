@@ -139,3 +139,25 @@ def delete_question(request, question_id):
     return {
         'question_id': question_id,
     }
+
+
+@post_api
+def update_question_text(request, question_id):
+    question = get_question_or_404(
+        question_id=question_id,
+        user=request.user,
+    )
+
+    form = QuestionForm(request.POST)
+    if not form.is_valid():
+        raise_form_error(form)
+
+    question = question_service.update_question_text(
+        question=question,
+        user=request.user,
+        text=form.cleaned_data['text'],
+    )
+
+    return {
+        'question': serialize_question(question),
+    }

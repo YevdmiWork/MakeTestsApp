@@ -45,10 +45,31 @@ def delete_question(
     user: User,
 ) -> None:
 
-    check_test_author(test=question.test,user=user)
+    check_test_author(test=question.test, user=user)
     check_test_not_published(test=question.test)
 
     question.delete()
+
+
+def update_question_text(
+    *,
+    question: Question,
+    user: User,
+    text: str,
+) -> Question:
+
+    check_test_author(test=question.test, user=user)
+    check_test_not_published(test=question.test)
+
+    question_validators.validate_question_text(
+        text=text,
+        max_length=const.QuestionLimits.TITLE_MAX_LENGTH,
+    )
+
+    question.text = text
+    question.save(update_fields=['text'])
+
+    return question
 
 
 def render_question(

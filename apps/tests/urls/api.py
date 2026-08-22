@@ -32,4 +32,9 @@ urlpatterns = [
         api.delete_question,
         name='delete_question'
     ),
+    path(
+        'question/<int:question_id>/text/update/',
+        api.update_question_text,
+        name='update_question_text'
+    ),
 ]
