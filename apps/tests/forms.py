@@ -49,7 +49,7 @@ class TestTitleForm(forms.ModelForm):
         }
 
 
-class QuestionCreateForm(forms.ModelForm):
+class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['text']

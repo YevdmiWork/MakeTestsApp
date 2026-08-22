@@ -2,7 +2,7 @@ from .serializers import serialize_tag, serialize_test, serialize_question
 
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequestError
-from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionCreateForm
+from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionForm
 from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
 
@@ -104,7 +104,7 @@ def add_question(request, test_id):
         user=request.user,
     )
 
-    form = QuestionCreateForm(request.POST)
+    form = QuestionForm(request.POST)
     if not form.is_valid():
         raise_form_error(form)
 
