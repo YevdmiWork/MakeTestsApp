@@ -1,8 +1,9 @@
 import pytest
 from django.contrib.auth import get_user_model
 
-from apps.tests.models.tag import Tag
-from apps.tests.models.test import Test
+from ..models.question import Question
+from ..models.tag import Tag
+from ..models.test import Test
 
 
 @pytest.fixture
@@ -35,3 +36,11 @@ def tag_factory(db):
     def factory(name):
         return Tag.objects.create(name=name)
     return factory
+
+
+@pytest.fixture
+def question(test):
+    return Question.objects.create(
+        test=test,
+        text='How much is 2-2= ?',
+    )
