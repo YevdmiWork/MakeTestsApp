@@ -75,3 +75,10 @@ class AnswerCreateForm(forms.ModelForm):
 
 class TagForm(forms.Form):
     tag_id = forms.IntegerField()
+
+
+class QuestionTypeForm(forms.Form):
+    type = forms.ChoiceField(
+        choices=Question.QuestionType.choices,
+        required=True
+    )

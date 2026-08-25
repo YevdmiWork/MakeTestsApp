@@ -37,4 +37,9 @@ urlpatterns = [
         api.update_question_text,
         name='update_question_text'
     ),
+    path(
+        'question/<int:question_id>/type/update/',
+        api.update_question_type,
+        name='update_question_type',
+    ),
 ]

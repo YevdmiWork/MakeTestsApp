@@ -72,6 +72,26 @@ def update_question_text(
     return question
 
 
+def update_question_type(
+    *,
+    question: Question,
+    user: User,
+    question_type: str,
+) -> Question:
+
+    check_test_author(test=question.test, user=user)
+    check_test_not_published(test=question.test)
+
+    question_validators.validate_question_type(
+        question_type=question_type,
+    )
+
+    question.type = question_type
+    question.save(update_fields=['type'])
+
+    return question
+
+
 def render_question(
     question: Question,
     test: Test,

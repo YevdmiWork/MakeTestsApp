@@ -2,7 +2,7 @@ from .serializers import serialize_tag, serialize_test, serialize_question
 
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequestError
-from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionForm
+from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionForm, QuestionTypeForm
 from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
 
@@ -156,6 +156,28 @@ def update_question_text(request, question_id):
         question=question,
         user=request.user,
         text=form.cleaned_data['text'],
+    )
+
+    return {
+        'question': serialize_question(question),
+    }
+
+
+@post_api
+def update_question_type(request, question_id):
+    question = get_question_or_404(
+        question_id=question_id,
+        user=request.user,
+    )
+
+    form = QuestionTypeForm(request.POST)
+    if not form.is_valid():
+        raise_form_error(form)
+
+    question = question_service.update_question_type(
+        question=question,
+        user=request.user,
+        question_type=form.cleaned_data['type'],
     )
 
     return {
