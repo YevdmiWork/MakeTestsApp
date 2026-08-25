@@ -1,4 +1,3 @@
-from django.db import transaction
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
@@ -13,7 +12,6 @@ from ..validators import question as question_validators
 from apps.users.models import User
 
 
-@transaction.atomic
 def create_question(
     *,
     test: Test,
@@ -38,7 +36,6 @@ def create_question(
     return question
 
 
-@transaction.atomic
 def delete_question(
     *,
     question: Question,

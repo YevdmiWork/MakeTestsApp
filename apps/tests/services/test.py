@@ -1,5 +1,4 @@
 import uuid
-from django.db import transaction
 
 from ..models.test import Test
 from ..permissions import check_test_author, check_test_not_published
@@ -12,7 +11,6 @@ from apps.users.models import User
 
 class SlugService:
     @staticmethod
-    @transaction.atomic
     def generate_slug() -> str:
         while True:
             slug = uuid.uuid4().hex[:const.TestLimits.SLUG_MAX_LENGTH]
@@ -42,7 +40,6 @@ def create_test(
     return test
 
 
-@transaction.atomic
 def update_test(
     *,
     test: Test,

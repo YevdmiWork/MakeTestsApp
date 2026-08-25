@@ -34,7 +34,6 @@ def add_tag_to_test(
     return tag
 
 
-@transaction.atomic
 def remove_tag_from_test(
     *,
     test: Test,
