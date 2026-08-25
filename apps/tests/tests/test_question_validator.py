@@ -29,3 +29,29 @@ class TestValidateQuestion:
                 text=text,
                 max_length=QuestionLimits.TITLE_MAX_LENGTH,
             )
+
+
+class TestValidateQuestionText:
+    def test_empty_text(self):
+        with pytest.raises(AppValidationError):
+            validate_question_text(
+                text='',
+                max_length=QuestionLimits.TITLE_MAX_LENGTH,
+            )
+
+    def test_equal_max(self):
+        text = 'a' * QuestionLimits.TITLE_MAX_LENGTH
+
+        validate_question_text(
+            text=text,
+            max_length=QuestionLimits.TITLE_MAX_LENGTH,
+        )
+
+    def test_greater_than_max(self):
+        text = 'a' * (QuestionLimits.TITLE_MAX_LENGTH + 1)
+
+        with pytest.raises(AppValidationError):
+            validate_question_text(
+                text=text,
+                max_length=QuestionLimits.TITLE_MAX_LENGTH,
+            )
