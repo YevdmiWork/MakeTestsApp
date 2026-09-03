@@ -1,5 +1,6 @@
 import pytest
 
+from ..models.question import Question
 from ..services import question as question_service
 
 @pytest.mark.django_db
@@ -32,3 +33,20 @@ def test_update_question_text(test, user, question):
     question.refresh_from_db()
 
     assert question.text == new_text
+
+
+@pytest.mark.django_db
+def test_update_question_type(question, user):
+    question_type = Question.QuestionType.SINGLE_CHOICE
+
+    result = question_service.update_question_type(
+        question=question,
+        user=user,
+        question_type=question_type,
+    )
+
+    assert result is question
+
+    question.refresh_from_db()
+
+    assert question.type == question_type
