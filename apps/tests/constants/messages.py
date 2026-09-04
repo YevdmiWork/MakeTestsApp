@@ -10,6 +10,7 @@ class QuestionMessages:
     EMPTY_TEXT = 'Текст не может быть пустым'
     TYPE_NOT_FOUND = 'Тип вопроса не найден'
     WRONG_TYPE = 'Некорректный тип вопроса'
+    QUESTION_LIMIT = 'Лимит вопросов'
 
 
 class TagMessages:
