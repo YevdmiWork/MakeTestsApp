@@ -11,12 +11,15 @@ from apps.users.models import User
 
 
 @transaction.atomic
-def add_tag_to_test(
+def add_tag(
     *,
     test: Test,
     user: User,
     tag_id: int,
 ) -> Tag:
+    test.refresh_from_db(
+        from_queryset=Test.objects.select_for_update(),
+    )
 
     check_test_author(test=test, user=user)
     check_test_not_published(test=test)
