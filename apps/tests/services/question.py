@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.http import HttpRequest
 from django.template.loader import render_to_string
 
@@ -12,6 +13,7 @@ from ..validators import question as question_validators
 from apps.users.models import User
 
 
+@transaction.atomic
 def create_question(
     *,
     test: Test,
@@ -19,8 +21,14 @@ def create_question(
     text: str,
 ) -> Question:
 
+    test.refresh_from_db(
+        from_queryset=Test.objects.select_for_update(),
+    )
+
     check_test_author(test=test, user=user)
     check_test_not_published(test=test)
+
+    question_validators.validate_question_limit(test=test)
 
     question_validators.validate_question_text(
         text=text,
@@ -36,11 +44,17 @@ def create_question(
     return question
 
 
+@transaction.atomic
 def delete_question(
     *,
     question: Question,
     user: User,
 ) -> None:
+    test = question.test
+
+    test.refresh_from_db(
+        from_queryset=Test.objects.select_for_update(),
+    )
 
     check_test_author(test=question.test, user=user)
     check_test_not_published(test=question.test)

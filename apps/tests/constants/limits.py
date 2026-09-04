@@ -22,6 +22,8 @@ class RatingLimits:
 class QuestionLimits:
     TITLE_MAX_LENGTH = 350
 
+    MAX_QUESTIONS = 10
+
     MIN_ANSWERS_COUNT = 2
     MIN_CORRECT_ANSWERS_COUNT = 1
 
