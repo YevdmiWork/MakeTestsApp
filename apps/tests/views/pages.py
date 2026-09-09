@@ -1,5 +1,4 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db import transaction
 from django.shortcuts import redirect
 from django.views.generic import ListView, CreateView, DetailView
 
@@ -58,19 +57,14 @@ class AddTest(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         try:
-            with transaction.atomic():
-                self.object = test_services.create_test(
-                    user=self.request.user,
-                    title=form.cleaned_data['title']
-                )
+            self.object = test_services.create_test(
+                user=self.request.user,
+                title=form.cleaned_data['title']
+            )
 
         except AppValidationError as e:
             for err in e.details['errors']:
                 form.add_error(None, err)
-            return self.form_invalid(form)
-
-        except AppError as e:
-            form.add_error(None, e.message)
             return self.form_invalid(form)
 
         return redirect(self.object.get_edit_url())

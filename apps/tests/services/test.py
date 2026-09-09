@@ -1,4 +1,5 @@
 import uuid
+from django.db import transaction
 
 from ..models.test import Test
 from ..permissions import check_test_author, check_test_not_published
@@ -18,12 +19,15 @@ class SlugService:
                 return slug
 
 
+@transaction.atomic
 def create_test(
     *,
     user: User,
     title: str
 ) -> Test:
-    title = (title or '').strip()
+    user = User.objects.select_for_update().get(pk=user.pk)
+
+    title = title.strip()
 
     test_validators.validate_test_limit(user=user)
     test_validators.validate_test_title(title=title)
