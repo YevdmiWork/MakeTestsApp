@@ -10,13 +10,8 @@ from ..constants import limits as const
 from apps.users.models import User
 
 
-class SlugService:
-    @staticmethod
-    def generate_slug() -> str:
-        while True:
-            slug = uuid.uuid4().hex[:const.TestLimits.SLUG_MAX_LENGTH]
-            if not Test.objects.filter(slug=slug).exists():
-                return slug
+def generate_slug() -> str:
+    return uuid.uuid4().hex[:const.TestLimits.SLUG_MAX_LENGTH]
 
 
 @transaction.atomic
@@ -35,7 +30,7 @@ def create_test(
     test = Test(
         author=user,
         title=title,
-        slug=SlugService.generate_slug(),
+        slug=generate_slug(),
     )
 
     test_validators.validate_test(test=test)
