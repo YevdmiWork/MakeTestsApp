@@ -37,7 +37,7 @@ def add_tag(
     return tag
 
 
-def remove_tag_from_test(
+def remove_tag(
     *,
     test: Test,
     user: User,
