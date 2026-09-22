@@ -1,14 +1,16 @@
-from .serializers import serialize_tag, serialize_test, serialize_question
+from .serializers import serialize_tag, serialize_test, serialize_question, serialize_answer
 
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequestError
-from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionForm, QuestionTypeForm
+from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionForm, QuestionTypeForm, AnswerCreateForm
+from ..query_selectors.answer import get_answer_or_404
 from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
 
 from ..services import tag as tag_service
 from ..services import test as test_service
 from ..services import question as question_service
+from ..services import answer as answer_service
 
 
 TEST_INFO_FIELDS = {
@@ -64,7 +66,7 @@ def add_tag(request, test_id):
     if not form.is_valid():
         raise_form_error(form)
 
-    tag = tag_service.add_tag_to_test(
+    tag = tag_service.add_tag(
         test=test,
         user=request.user,
         tag_id=form.cleaned_data['tag_id'],
@@ -86,7 +88,7 @@ def remove_tag(request, test_id):
     if not form.is_valid():
         raise_form_error(form)
 
-    tag = tag_service.remove_tag_from_test(
+    tag = tag_service.remove_tag(
         test=test,
         user=request.user,
         tag_id=form.cleaned_data['tag_id'],
@@ -182,4 +184,48 @@ def update_question_type(request, question_id):
 
     return {
         'question': serialize_question(question),
+    }
+
+
+@post_api
+def add_answer(request, question_id):
+    question = get_question_or_404(
+        question_id=question_id,
+        user=request.user,
+    )
+
+    form = AnswerCreateForm(request.POST)
+    if not form.is_valid():
+        raise_form_error(form)
+
+    answer = answer_service.create_answer(
+        question=question,
+        user=request.user,
+        text=form.cleaned_data['text'],
+        flag=form.cleaned_data['flag'],
+    )
+
+    return {
+        'answer': serialize_answer(answer),
+        'html': answer_service.render_answer(
+            answer,
+            request=request,
+        ),
+    }
+
+
+@post_api
+def delete_answer(request, answer_id):
+    answer = get_answer_or_404(
+        answer_id=answer_id,
+        user=request.user,
+    )
+
+    answer_service.delete_answer(
+        answer=answer,
+        user=request.user,
+    )
+
+    return {
+        'answer_id': answer_id,
     }

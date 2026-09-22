@@ -1,5 +1,7 @@
 from django.db import models
 
+from ..querysets.answer import AnswerQuerySet
+
 from ..constants import limits as const
 
 
@@ -28,3 +30,5 @@ class Answer(models.Model):
         indexes = [
             models.Index(fields=['flag']),
         ]
+
+    objects = AnswerQuerySet.as_manager()

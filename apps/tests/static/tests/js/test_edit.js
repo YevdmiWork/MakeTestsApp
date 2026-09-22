@@ -157,6 +157,31 @@ function initAddAnswerForms(context = document) {
             })
             .then(safeJsonFetch)
             .then(data => {
+                if (!data.data?.html) return;
+
+                const questionBlock = form.closest(
+                    '.questions-edit__question-block'
+                );
+
+                const answersList = questionBlock.querySelector(
+                    '.questions-edit__answers-list'
+                );
+
+                answersList.insertAdjacentHTML(
+                    'beforeend',
+                    data.data.html
+                );
+
+                form.reset();
+
+                answersList
+                    .querySelectorAll('.questions-edit__answer-number')
+                    .forEach((el, index) => {
+                        el.textContent = `${index + 1}.`;
+                    });
+
+                validateQuestionBlock(questionBlock);
+                adjustQuestionHeight(questionBlock);
             })
             .catch(handleRequestError)
         });
