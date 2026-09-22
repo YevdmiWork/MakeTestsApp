@@ -777,12 +777,6 @@ color: #ba2121;
     opacity: 0;
 }
 
-input[readonly],
-textarea[readonly]{
-    opacity: 0.7;
-    pointer-events: auto;
-}
-
 .test-info-edit__status-errors p {
     animation: fadeError 0.3s ease;
 }

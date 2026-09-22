@@ -33,3 +33,4 @@ class QuestionLimits:
 
 class AnswerLimits:
     MAX_TITLE_LENGTH = 299
+    MAX_ANSWERS = 10

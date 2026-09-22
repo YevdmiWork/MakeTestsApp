@@ -42,4 +42,15 @@ urlpatterns = [
         api.update_question_type,
         name='update_question_type',
     ),
+
+    path(
+        'answer/<int:question_id>/add/',
+        api.add_answer,
+        name='add_answer',
+    ),
+    path(
+        'answer/<int:answer_id>/delete/',
+        api.delete_answer,
+        name='delete_answer'
+    ),
 ]

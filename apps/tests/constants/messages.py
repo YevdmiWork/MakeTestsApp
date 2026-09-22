@@ -17,3 +17,9 @@ class TagMessages:
     TAG_LIMIT = 'Лимит тегов'
     ALREADY_ADDED = 'Тег уже добавлен'
     NOT_FOUND = 'Тег не найден'
+
+
+class AnswerMessages:
+    ALREADY_EXISTS = 'Новый ответ дублируется'
+    ANSWER_LIMIT = 'Лимит ответов'
+    EMPTY_TEXT = 'Пустой ответ'
