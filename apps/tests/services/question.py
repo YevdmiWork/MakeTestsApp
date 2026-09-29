@@ -99,6 +99,41 @@ def update_question_type(
     return question
 
 
+@transaction.atomic
+def upload_question_image(
+    *,
+    question: Question,
+    user: User,
+    image,
+) -> Question:
+
+    check_test_author(test=question.test, user=user)
+    check_test_not_published(test=question.test)
+
+    question.image = image
+    question.save(update_fields=['image'])
+
+    return question
+
+
+def delete_question_image(
+    *,
+    question: Question,
+    user: User,
+) -> Question:
+
+    check_test_author(test=question.test, user=user)
+    check_test_not_published(test=question.test)
+
+    if question.image:
+        question.image.delete(save=False)
+
+    question.image = None
+    question.save(update_fields=['image'])
+
+    return question
+
+
 def render_question(
     question: Question,
     test: Test,

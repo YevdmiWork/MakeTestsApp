@@ -42,6 +42,16 @@ urlpatterns = [
         api.update_question_type,
         name='update_question_type',
     ),
+    path(
+        'question/<int:question_id>/image/upload/',
+        api.upload_question_image,
+        name="upload_question_image",
+    ),
+    path(
+        'question/<int:question_id>/image/delete/',
+        api.delete_question_image,
+        name="delete_question_image",
+    ),
 
     path(
         'answer/<int:question_id>/add/',

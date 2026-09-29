@@ -587,7 +587,9 @@ document.addEventListener("change", function (e) {
 
     const input = e.target;
     const questionBlock = input.closest(".questions-edit__question-block");
-    const container = questionBlock.querySelector(".questions-edit__question-image-container");
+    const container = questionBlock.querySelector(
+        ".questions-edit__question-image-container"
+    );
 
     const questionId = input.dataset.questionId;
     const file = input.files[0];
@@ -602,35 +604,53 @@ document.addEventListener("change", function (e) {
     fetch(uploadUrl, {
         method: "POST",
         headers: {
-            "X-CSRFToken": document.querySelector('meta[name="csrf-token"]').content
+            "X-CSRFToken": document.querySelector(
+                'meta[name="csrf-token"]'
+            ).content
         },
         body: formData
     })
-    .then(safeJsonFetch)
-    .then(data => {
-        const imageUrl = data.data.image_url;
+        .then(safeJsonFetch)
+        .then(data => {
+            const imageUrl = data.data.image_url;
 
-        container.innerHTML = `
-            <button class="questions-edit__delete-image-btn span-answer-input"
+            container.innerHTML = `
+                <button
+                    class="questions-edit__delete-image-btn span-answer-input"
                     type="button"
                     data-question-id="${questionId}"
                     data-delete-url="${deleteUrl}">
-                Удалить картинку
-            </button>
-            <img src="${imageUrl}"
-                 class="questions-edit__question-image">
-        `;
-    })
-    .catch(handleRequestError);
+                    Удалить картинку
+                </button>
+
+                <img
+                    src="${imageUrl}"
+                    class="questions-edit__question-image"
+                    alt="Изображение вопроса">
+            `;
+
+            const image = container.querySelector(
+                ".questions-edit__question-image"
+            );
+
+            image.addEventListener("load", () => {
+                adjustQuestionHeight(questionBlock);
+            });
+        })
+        .catch(handleRequestError);
 });
 
 
 document.addEventListener("click", function (e) {
-    if (!e.target.classList.contains("questions-edit__delete-image-btn")) return;
+    if (!e.target.classList.contains(
+        "questions-edit__delete-image-btn"
+    )) return;
 
     const btn = e.target;
     const questionBlock = btn.closest(".questions-edit__question-block");
-    const container = questionBlock.querySelector(".questions-edit__question-image-container");
+    const container = questionBlock.querySelector(
+        ".questions-edit__question-image-container"
+    );
 
     const questionId = btn.dataset.questionId;
     const deleteUrl = container.dataset.deleteUrl;
@@ -640,25 +660,31 @@ document.addEventListener("click", function (e) {
     fetch(deleteUrl, {
         method: "POST",
         headers: {
-            "X-CSRFToken": document.querySelector('meta[name="csrf-token"]').content
+            "X-CSRFToken": document.querySelector(
+                'meta[name="csrf-token"]'
+            ).content
         },
         body: formData
     })
-    .then(safeJsonFetch)
-    .then(() => {
+        .then(safeJsonFetch)
+        .then(() => {
+            container.innerHTML = `
+                <input
+                    type="file"
+                    class="image-input"
+                    data-question-id="${questionId}"
+                    style="display:none;">
 
-        container.innerHTML = `
-            <input type="file"
-                   class="image-input"
-                   data-question-id="${questionId}"
-                   style="display:none;">
-            <button class="questions-edit__add-image-btn span-answer-input"
+                <button
+                    class="questions-edit__add-image-btn span-answer-input"
                     type="button">
-                Добавить картинку
-            </button>
-        `;
-    })
-    .catch(handleRequestError);
+                    Добавить картинку
+                </button>
+            `;
+
+            adjustQuestionHeight(questionBlock);
+        })
+        .catch(handleRequestError);
 });
 
 
