@@ -90,3 +90,7 @@ class AnswerTextForm(forms.Form):
 
 class AnswerFlagForm(forms.Form):
     flag = forms.BooleanField(required=False)
+
+
+class UploadImageForm(forms.Form):
+    image = forms.ImageField(required=True)

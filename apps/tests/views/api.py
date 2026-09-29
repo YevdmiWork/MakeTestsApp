@@ -2,7 +2,7 @@ from .serializers import serialize_tag, serialize_test, serialize_question, seri
 
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequestError
-from ..forms import AnswerFlagForm
+from ..forms import AnswerFlagForm, UploadImageForm
 from ..query_selectors.answer import get_answer_or_404
 from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
@@ -185,6 +185,47 @@ def update_question_type(request, question_id):
 
     return {
         'question': serialize_question(question),
+    }
+
+
+@post_api
+def upload_question_image(request, question_id):
+    question = get_question_or_404(
+        question_id=question_id,
+        user=request.user,
+    )
+
+    form = forms.UploadImageForm(request.POST, request.FILES)
+
+    if not form.is_valid():
+        raise_form_error(form)
+
+    question = question_service.upload_question_image(
+        question=question,
+        user=request.user,
+        image=form.cleaned_data['image'],
+    )
+
+    return {
+        'question': serialize_question(question),
+        'image_url': question.image.url if question.image else None,
+    }
+
+
+@post_api
+def delete_question_image(request, question_id):
+    question = get_question_or_404(
+        question_id=question_id,
+        user=request.user,
+    )
+
+    question_service.delete_question_image(
+        question=question,
+        user=request.user,
+    )
+
+    return {
+        'question_id': question_id,
     }
 
 
