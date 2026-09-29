@@ -96,6 +96,23 @@ def update_answer_text(
     return answer
 
 
+def update_answer_flag(
+    *,
+    answer: Answer,
+    user: User,
+    flag: bool,
+) -> Answer:
+    question = answer.question
+
+    check_test_author(test=question.test, user=user)
+    check_test_not_published(test=question.test)
+
+    answer.flag = flag
+    answer.save(update_fields=['flag'])
+
+    return answer
+
+
 def render_answer(
     answer: Answer,
     request: HttpRequest,

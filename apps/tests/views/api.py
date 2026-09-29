@@ -2,6 +2,7 @@ from .serializers import serialize_tag, serialize_test, serialize_question, seri
 
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequestError
+from ..forms import AnswerFlagForm
 from ..query_selectors.answer import get_answer_or_404
 from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
@@ -246,6 +247,28 @@ def update_answer_text(request, answer_id):
         answer=answer,
         user=request.user,
         text=form.cleaned_data['text'],
+    )
+
+    return {
+        'answer': serialize_answer(answer)
+    }
+
+
+@post_api
+def update_answer_flag(request, answer_id):
+    answer = get_answer_or_404(
+        answer_id=answer_id,
+        user=request.user,
+    )
+
+    form = AnswerFlagForm(request.POST)
+    if not form.is_valid():
+        raise_form_error(form)
+
+    answer = answer_service.update_answer_flag(
+        answer=answer,
+        user=request.user,
+        flag=form.cleaned_data['flag'],
     )
 
     return {
