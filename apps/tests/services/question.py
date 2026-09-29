@@ -29,16 +29,12 @@ def create_question(
     check_test_not_published(test=test)
 
     question_validators.validate_question_limit(test=test)
-
     question_validators.validate_question_text(
         text=text,
         max_length=const.QuestionLimits.TITLE_MAX_LENGTH,
     )
 
-    question = Question(
-        test=test,
-        text=text,
-    )
+    question = Question(test=test, text=text)
 
     question.save()
     return question
@@ -56,8 +52,8 @@ def delete_question(
         from_queryset=Test.objects.select_for_update(),
     )
 
-    check_test_author(test=question.test, user=user)
-    check_test_not_published(test=question.test)
+    check_test_author(test=test, user=user)
+    check_test_not_published(test=test)
 
     question.delete()
 

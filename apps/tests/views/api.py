@@ -2,7 +2,6 @@ from .serializers import serialize_tag, serialize_test, serialize_question, seri
 
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequestError
-from ..forms import TestTitleForm, TestContentForm, TagForm, QuestionForm, QuestionTypeForm, AnswerCreateForm
 from ..query_selectors.answer import get_answer_or_404
 from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
@@ -11,11 +10,12 @@ from ..services import tag as tag_service
 from ..services import test as test_service
 from ..services import question as question_service
 from ..services import answer as answer_service
+from .. import forms
 
 
 TEST_INFO_FIELDS = {
-    'title': TestTitleForm,
-    'content': TestContentForm,
+    'title': forms.TestTitleForm,
+    'content': forms.TestContentForm,
 }
 
 def raise_form_error(form):
@@ -62,7 +62,7 @@ def add_tag(request, test_id):
         user=request.user,
     )
 
-    form = TagForm(request.POST)
+    form = forms.TagForm(request.POST)
     if not form.is_valid():
         raise_form_error(form)
 
@@ -84,7 +84,7 @@ def remove_tag(request, test_id):
         user=request.user,
     )
 
-    form = TagForm(request.POST)
+    form = forms.TagForm(request.POST)
     if not form.is_valid():
         raise_form_error(form)
 
@@ -106,7 +106,7 @@ def add_question(request, test_id):
         user=request.user,
     )
 
-    form = QuestionForm(request.POST)
+    form = forms.QuestionForm(request.POST)
     if not form.is_valid():
         raise_form_error(form)
 
@@ -150,7 +150,7 @@ def update_question_text(request, question_id):
         user=request.user,
     )
 
-    form = QuestionForm(request.POST)
+    form = forms.QuestionForm(request.POST)
     if not form.is_valid():
         raise_form_error(form)
 
@@ -172,7 +172,7 @@ def update_question_type(request, question_id):
         user=request.user,
     )
 
-    form = QuestionTypeForm(request.POST)
+    form = forms.QuestionTypeForm(request.POST)
     if not form.is_valid():
         raise_form_error(form)
 
@@ -194,7 +194,7 @@ def add_answer(request, question_id):
         user=request.user,
     )
 
-    form = AnswerCreateForm(request.POST)
+    form = forms.AnswerCreateForm(request.POST)
     if not form.is_valid():
         raise_form_error(form)
 
@@ -228,4 +228,26 @@ def delete_answer(request, answer_id):
 
     return {
         'answer_id': answer_id,
+    }
+
+
+@post_api
+def update_answer_text(request, answer_id):
+    answer = get_answer_or_404(
+        answer_id=answer_id,
+        user=request.user,
+    )
+
+    form = forms.AnswerTextForm(request.POST)
+    if not form.is_valid():
+        raise_form_error(form)
+
+    answer = answer_service.update_answer_text(
+        answer=answer,
+        user=request.user,
+        text=form.cleaned_data['text'],
+    )
+
+    return {
+        'answer': serialize_answer(answer)
     }
