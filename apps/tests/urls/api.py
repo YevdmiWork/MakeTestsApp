@@ -58,4 +58,9 @@ urlpatterns = [
         api.update_answer_text,
         name='update_answer_text',
     ),
+    path(
+        'answer_flag/<int:answer_id>/update/',
+        api.update_answer_flag,
+        name='update_answer_flag',
+    ),
 ]

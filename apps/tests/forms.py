@@ -83,5 +83,10 @@ class QuestionTypeForm(forms.Form):
         required=True
     )
 
+
 class AnswerTextForm(forms.Form):
     text = forms.CharField()
+
+
+class AnswerFlagForm(forms.Form):
+    flag = forms.BooleanField(required=False)
