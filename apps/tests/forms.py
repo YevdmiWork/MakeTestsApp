@@ -82,3 +82,6 @@ class QuestionTypeForm(forms.Form):
         choices=Question.QuestionType.choices,
         required=True
     )
+
+class AnswerTextForm(forms.Form):
+    text = forms.CharField()

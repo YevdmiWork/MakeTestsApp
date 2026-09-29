@@ -53,4 +53,9 @@ urlpatterns = [
         api.delete_answer,
         name='delete_answer'
     ),
+    path(
+        'answer_text/<int:answer_id>/update/',
+        api.update_answer_text,
+        name='update_answer_text',
+    ),
 ]

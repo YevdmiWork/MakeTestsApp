@@ -23,17 +23,10 @@ def create_answer(
         from_queryset=Question.objects.select_for_update(),
     )
 
-    check_test_author(
-        test=question.test,
-        user=user,
-    )
-    check_test_not_published(
-        test=question.test,
-    )
+    check_test_author(test=question.test, user=user)
+    check_test_not_published(test=question.test)
 
-    validate_answer_limit(
-        question=question,
-    )
+    validate_answer_limit(question=question)
     validate_answer_text(
         text=text,
         max_length=AnswerLimits.MAX_TITLE_LENGTH,
@@ -75,6 +68,32 @@ def delete_answer(
     )
 
     answer.delete()
+
+
+def update_answer_text(
+    *,
+    answer: Answer,
+    user: User,
+    text: str,
+) -> Answer:
+    question = answer.question
+
+    check_test_author(test=question.test, user=user)
+    check_test_not_published(test=question.test)
+
+    validate_answer_text(
+        text=text,
+        max_length=AnswerLimits.MAX_TITLE_LENGTH,
+    )
+    validate_answer_exists(
+        text=text,
+        question=question,
+    )
+
+    answer.text = text
+    answer.save(update_fields=['text'])
+
+    return answer
 
 
 def render_answer(
