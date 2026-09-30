@@ -11,6 +11,8 @@ class QuestionMessages:
     TYPE_NOT_FOUND = 'Тип вопроса не найден'
     WRONG_TYPE = 'Некорректный тип вопроса'
     QUESTION_LIMIT = 'Лимит вопросов'
+    WRONG_IMAGE_FORMAT = 'Некорректный формат изображения'
+    IMAGE_TOO_LARGE = 'Изображение имеет слишком большой размер'
 
 
 class TagMessages:
