@@ -88,7 +88,10 @@
         <div class="test-info-edit__status-errors">
         </div>
         <div class="test-info-edit__status">
-            <form method="post" id="publishForm">
+            <form method="post"
+                  id="publishForm"
+                  data-publish-url="{% url 'api:publish_test' test.id %}"
+                  data-unpublish-url="{% url 'api:unpublish_test' test.id %}">
                 {% csrf_token %}
                 <button type="submit" id="publishBtn" class="test-info-edit__publication-btn">
                     {% if test.status == 'published' %}Редактировать{% else %}Опубликовать{% endif %}

@@ -1,6 +1,7 @@
 import uuid
 from django.db import transaction
 
+from ..models.choices import TestStatus
 from ..models.test import Test
 from ..permissions import check_test_author, check_test_not_published
 
@@ -68,5 +69,42 @@ def update_test(
 
     if update_fields:
         test.save(update_fields=update_fields)
+
+    return test
+
+
+@transaction.atomic
+def publish_test(
+    *,
+    test: Test,
+    user: User,
+) -> Test:
+    test.refresh_from_db(
+        from_queryset=Test.objects.select_for_update(),
+    )
+
+    check_test_author(test=test, user=user)
+    check_test_not_published(test=test)
+
+    test_validators.validate_test_min_tags(test=test)
+    test_validators.validate_test_questions_count(test=test)
+    test_validators.validate_test_questions(test=test)
+
+    test.status = TestStatus.PUBLISHED
+    test.save(update_fields=['status', 'time_update'])
+
+    return test
+
+
+def unpublish_test(
+    *,
+    test: Test,
+    user: User,
+) -> Test:
+
+    check_test_author(test=test, user=user)
+
+    test.status = TestStatus.UNPUBLISHED
+    test.save(update_fields=['status', 'time_update'])
 
     return test

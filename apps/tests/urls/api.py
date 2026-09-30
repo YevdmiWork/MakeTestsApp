@@ -10,6 +10,16 @@ urlpatterns = [
         api.update_test_info,
         name='update_test',
     ),
+    path(
+        'test/<int:test_id>/publish/',
+        api.publish_test,
+        name='publish_test'
+    ),
+    path(
+        'test/<int:test_id>/unpublish/',
+        api.unpublish_test,
+        name='unpublish_test'
+    ),
 
     path(
         'tag/<int:test_id>/add/',

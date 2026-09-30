@@ -2,7 +2,8 @@ from .serializers import serialize_tag, serialize_test, serialize_question, seri
 
 from ..decorators import post_api
 from ..exceptions import AppValidationError, BadRequestError
-from ..forms import AnswerFlagForm, UploadImageForm
+from ..forms import AnswerFlagForm
+from ..models.choices import TestStatus
 from ..query_selectors.answer import get_answer_or_404
 from ..query_selectors.question import get_question_or_404
 from ..query_selectors.test import get_test_or_404
@@ -314,4 +315,40 @@ def update_answer_flag(request, answer_id):
 
     return {
         'answer': serialize_answer(answer)
+    }
+
+
+@post_api
+def publish_test(request, test_id):
+    test = get_test_or_404(
+        test_id=test_id,
+        user=request.user,
+    )
+
+    test = test_service.publish_test(
+        test=test,
+        user=request.user,
+    )
+
+    return {
+        'test': serialize_test(test),
+        'status_display': TestStatus(test.status).label,
+    }
+
+
+@post_api
+def unpublish_test(request, test_id):
+    test = get_test_or_404(
+        test_id=test_id,
+        user=request.user,
+    )
+
+    test = test_service.unpublish_test(
+        test=test,
+        user=request.user,
+    )
+
+    return {
+        'test': serialize_test(test),
+        'status_display': TestStatus(test.status).label,
     }

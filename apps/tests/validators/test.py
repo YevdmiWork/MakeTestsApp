@@ -1,8 +1,9 @@
 from django.core.exceptions import ValidationError
 
-from ..constants.limits import TestLimits
+from .question import validate_question_for_publish, validate_question_text, validate_question_type
+from ..constants.limits import TestLimits, QuestionLimits
 from ..constants.messages import TestMessages
-from ..exceptions import AppValidationError
+from ..exceptions import AppValidationError, PublishValidationError
 from ..models.test import Test
 
 from apps.users.models import User
@@ -49,3 +50,47 @@ def validate_test_content(*, content: str | None) -> None:
         raise AppValidationError([
             f'Описание больше {TestLimits.CONTENT_MAX_LENGTH} символов'
         ])
+
+
+def validate_test_min_tags(*, test: Test) -> None:
+    if not test.tags.exists():
+        raise PublishValidationError([
+            TestMessages.REQUIRED_TAG,
+        ])
+
+
+def validate_test_questions_count(*, test: Test) -> None:
+    questions_count = test.questions.count()
+
+    if questions_count < QuestionLimits.MIN_QUESTIONS_FOR_PUBLISH:
+        raise PublishValidationError([
+            f'Для публикации необходимо минимум {QuestionLimits.MIN_QUESTIONS_FOR_PUBLISH} вопроса '
+        ])
+
+
+def validate_test_questions(*, test: Test) -> None:
+    errors = []
+
+    questions = test.questions.all()
+
+    for number, question in enumerate(questions, start=1):
+        validate_question_text(
+            text=question.text,
+            max_length=QuestionLimits.TITLE_MAX_LENGTH,
+        )
+
+        validate_question_type(
+            question_type=question.type,
+        )
+
+        try:
+            validate_question_for_publish(
+                question=question,
+                number=number,
+            )
+
+        except PublishValidationError as exc:
+            errors.extend(exc.details['errors'])
+
+    if errors:
+        raise PublishValidationError(errors)
