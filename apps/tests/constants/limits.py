@@ -30,6 +30,16 @@ class QuestionLimits:
     TF_MIN_ANSWERS_COUNT = 1
     SC_CORRECT_ANSWERS_COUNT = 1
 
+    MAX_IMAGE_SIZE = 20 * 1024 * 1024
+    MAX_IMAGE_WIDTH = 1920
+    MAX_IMAGE_HEIGHT = 1080
+
+    ALLOWED_IMAGE_FORMATS = {
+        'JPEG',
+        'PNG',
+        'WEBP',
+    }
+
 
 class AnswerLimits:
     MAX_TITLE_LENGTH = 299

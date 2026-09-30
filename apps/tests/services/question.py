@@ -6,6 +6,7 @@ from ..forms import AnswerCreateForm
 from ..models.question import Question
 from ..models.test import Test
 from ..permissions import check_test_author, check_test_not_published
+from ..validators.question import validate_question_image
 
 from ..constants import limits as const
 from ..validators import question as question_validators
@@ -109,6 +110,8 @@ def upload_question_image(
 
     check_test_author(test=question.test, user=user)
     check_test_not_published(test=question.test)
+
+    validate_question_image(image=image)
 
     question.image = image
     question.save(update_fields=['image'])
