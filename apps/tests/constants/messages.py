@@ -4,6 +4,7 @@ class TestMessages:
     NOT_AUTHOR = 'Вы не являетесь владельцем теста'
     ALREADY_PUBLISHED = 'Тест уже опубликован'
     TEST_LIMIT = 'Лимит тестов'
+    REQUIRED_TAG = 'Для публикации необходимо добавить хотя бы один тег'
 
 
 class QuestionMessages:

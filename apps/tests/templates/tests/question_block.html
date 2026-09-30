@@ -10,7 +10,8 @@
                value="{{ question.text }}"
                data-question-id="{{ question.id }}"
                class="questions-edit__title-input span-text"
-               autocomplete="off">
+               autocomplete="off"
+               readonly>
         <div class="questions-edit__panel">
             <span class="questions-edit__panel-text span-text">
                 !
@@ -24,8 +25,7 @@
                  data-delete-url="{% url 'api:delete_question_image' question.id %}">
                 {% if question.image %}
                     <button class="questions-edit__delete-image-btn span-answer-input"
-                            data-question-id="{{ question.id }}"
-                            data-delete-url="{% url 'api:delete_question_image' question.id %}">
+                            data-question-id="{{ question.id }}">
                         Удалить картинку
                     </button>
                     <img src="{{ question.image.url }}"
@@ -39,8 +39,7 @@
                            style="display: none;">
                     <button class="questions-edit__add-image-btn span-answer-input"
                             type="button"
-                            data-question-id="{{ question.id }}"
-                            data-upload-url="{% url 'api:upload_question_image' question.id %}">
+                            data-question-id="{{ question.id }}">
                         Добавить картинку
                     </button>
                 {% endif %}
@@ -80,7 +79,7 @@
             <meta name="csrf-token"
                   content="{{ csrf_token }}">
             {% for answer in question.answers.all %}
-                {% include 'tests/answer_block.html' with answer=answer counter=forloop.counter %}
+                {% include 'tests/answer_block.html' with answer=answer question=question counter=forloop.counter %}
             {% endfor %}
         </div>
         <div class="questions-edit__add-answer-container">
@@ -97,7 +96,8 @@
                     <div class="questions-edit__add-answer-input">
                         {{ add_answer_form.text }}
                     </div>
-                    <div class="questions-edit__add-answer-flag">
+                    <div class="questions-edit__add-answer-flag"
+                         {% if question.type == 'TF' %}hidden{% endif %}>
                         {{ add_answer_form.flag }}
                     </div>
                 </div>

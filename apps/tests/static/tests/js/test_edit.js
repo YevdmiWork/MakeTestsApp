@@ -491,29 +491,62 @@ document.addEventListener("DOMContentLoaded", () => {
     updateAddButton();
 });
 
+function updateQuestionTypeUI(questionBlock, type) {
+    const flags = questionBlock.querySelectorAll(
+        '.questions-edit__answer-flag'
+    );
+
+    const addAnswerFlag = questionBlock.querySelector(
+        '.questions-edit__add-answer-flag'
+    );
+
+    const isTextField = type === 'TF';
+
+    flags.forEach(flag => {
+        flag.hidden = isTextField;
+        flag.disabled = isTextField;
+    });
+
+    if (addAnswerFlag) {
+        addAnswerFlag.hidden = isTextField;
+    }
+}
 
 document.addEventListener('change', function (e) {
-    if (e.target.classList.contains('questions-edit__type-selector')) {
-        const select = e.target;
-        const questionId = select.dataset.questionId;
-        const updateUrl = select.dataset.updateUrl;
-        const newType = select.value;
+    if (!e.target.classList.contains('questions-edit__type-selector')) {
+        return;
+    }
 
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const select = e.target;
 
-        const formData = new FormData();
-        formData.append('type', newType);
+    const questionBlock = select.closest(
+        '.questions-edit__question-block'
+    );
 
-        fetch(updateUrl, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': csrfToken,
-            },
-            body: formData
-        })
+    const updateUrl = select.dataset.updateUrl;
+    const newType = select.value;
+
+    updateQuestionTypeUI(
+        questionBlock,
+        newType
+    );
+
+    const csrfToken = document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute('content');
+
+    const formData = new FormData();
+    formData.append('type', newType);
+
+    fetch(updateUrl, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrfToken,
+        },
+        body: formData
+    })
         .then(safeJsonFetch)
         .catch(handleRequestError);
-    }
 });
 
 
@@ -755,15 +788,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         testEditBlock.querySelectorAll('input').forEach(el => {
-
-            if (el === publishBtn) return;
-
-            if (el.type === 'checkbox') {
+            if (el.type === 'checkbox' || el.type === 'file') {
                 el.disabled = !enable;
             } else {
                 el.readOnly = !enable;
             }
-
         });
 
         testEditBlock.querySelectorAll('select').forEach(el => {
@@ -774,23 +803,32 @@ document.addEventListener('DOMContentLoaded', function() {
             if (el === publishBtn) return;
             el.disabled = !enable;
         });
+    }
+    function applyTestState() {
 
+        const isPublished =
+            testEditBlock.dataset.status === 'published';
+
+        toggleInputs(!isPublished);
+
+        publishBtn.textContent =
+            isPublished
+                ? 'Редактировать'
+                : 'Опубликовать';
     }
 
-    toggleInputs(testEditBlock.dataset.status !== 'published');
-
-    publishBtn.textContent =
-        testEditBlock.dataset.status === 'published'
-        ? 'Редактировать'
-        : 'Опубликовать';
+    applyTestState();
 
     async function handlePublish() {
 
-        const isPublished = testEditBlock.dataset.status === 'published';
-        const url = isPublished ? unpublishUrl : publishUrl;
+        const isPublished =
+            testEditBlock.dataset.status === 'published';
+
+        const url = isPublished
+            ? unpublishUrl
+            : publishUrl;
 
         try {
-
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -800,20 +838,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             const data = await safeJsonFetch(response);
-            testEditBlock.dataset.status =
-                isPublished ? 'unpublished' : 'published';
 
-            statusText.textContent = 'Статус: ' + data.data.status;
+            const newStatus = isPublished
+                ? 'unpublished'
+                : 'published';
 
-            publishBtn.textContent =
-                isPublished ? 'Опубликовать' : 'Редактировать';
+            testEditBlock.dataset.status = newStatus;
 
-            toggleInputs(isPublished);
+            statusText.textContent =
+                'Статус: ' + data.data.status_display;
+
+            applyTestState();
 
         } catch (err) {
             handleRequestError(err);
         }
-
     }
 
     form.addEventListener('submit', async function(e) {
@@ -882,8 +921,10 @@ function validateQuestionBlock(questionBlock) {
         if (correctCount !== 1) isValid = false;
     }
 
-    if (type === 'MC' || type === 'TF') {
-        if (correctCount === 0) isValid = false;
+    if (type === 'MC') {
+        if (correctCount === 0) {
+            isValid = false;
+        }
     }
 
     questionBlock.classList.toggle(

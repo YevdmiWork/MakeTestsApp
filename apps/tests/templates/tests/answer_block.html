@@ -19,7 +19,8 @@
            name="flag"
            class="questions-edit__answer-flag"
            data-answer-id="{{ answer.id }}"
-           {% if answer.flag %}checked{% endif %}>
+           {% if answer.flag %}checked{% endif %}
+           {% if question.type == 'TF' %}hidden disabled{% endif %}>
     <div>
         <button type="button"
                 class="questions-edit__answer-delete"

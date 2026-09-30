@@ -2,7 +2,7 @@ from PIL import Image, UnidentifiedImageError
 
 from ..constants.limits import QuestionLimits
 from ..constants.messages import QuestionMessages
-from ..exceptions import AppValidationError
+from ..exceptions import AppValidationError, PublishValidationError
 from ..models.question import Question
 from ..models.test import Test
 
@@ -110,3 +110,80 @@ def validate_question_image(*, image) -> None:
         max_width=QuestionLimits.MAX_IMAGE_WIDTH,
         max_height=QuestionLimits.MAX_IMAGE_HEIGHT,
     )
+
+
+def validate_question_for_publish(
+    *,
+    question: Question,
+    number: int,
+) -> None:
+    validators = {
+        Question.QuestionType.SINGLE_CHOICE: validate_single_choice_question,
+        Question.QuestionType.MULTIPLE_CHOICES: validate_multiple_choice_question,
+        Question.QuestionType.TEXT_FIELD: validate_text_field_question,
+    }
+
+    validator = validators.get(question.type)
+
+    validator(
+        question=question,
+        number=number,
+    )
+
+
+def validate_single_choice_question(
+    *,
+    question: Question,
+    number: int,
+) -> None:
+    answers = question.answers.all()
+
+    if answers.count() < QuestionLimits.MIN_ANSWERS_COUNT:
+        raise PublishValidationError([
+            f'Вопрос №{number}: должно быть минимум '
+            f'{QuestionLimits.MIN_ANSWERS_COUNT} ответа.',
+        ])
+
+    correct_count = answers.filter(flag=True).count()
+
+    if correct_count != QuestionLimits.SC_CORRECT_ANSWERS_COUNT:
+        raise PublishValidationError([
+            f'Вопрос №{number}: может быть только '
+            f'{QuestionLimits.SC_CORRECT_ANSWERS_COUNT} правильный ответ.',
+        ])
+
+
+def validate_multiple_choice_question(
+    *,
+    question: Question,
+    number: int,
+) -> None:
+    answers = question.answers.all()
+
+    if answers.count() < QuestionLimits.MIN_ANSWERS_COUNT:
+        raise PublishValidationError([
+            f'Вопрос №{number}: должно быть минимум '
+            f'{QuestionLimits.MIN_ANSWERS_COUNT} ответа.',
+        ])
+
+    correct_count = answers.filter(flag=True).count()
+
+    if correct_count < QuestionLimits.MIN_CORRECT_ANSWERS_COUNT:
+        raise PublishValidationError([
+            f'Вопрос №{number}: должен быть минимум '
+            f'{QuestionLimits.MIN_CORRECT_ANSWERS_COUNT} правильный ответ.',
+        ])
+
+
+def validate_text_field_question(
+    *,
+    question: Question,
+    number: int,
+) -> None:
+    answers = question.answers.all()
+
+    if answers.count() < QuestionLimits.TF_MIN_ANSWERS_COUNT:
+        raise PublishValidationError([
+            f'Вопрос №{number}: должен быть минимум '
+            f'{QuestionLimits.TF_MIN_ANSWERS_COUNT} ответ.',
+        ])
