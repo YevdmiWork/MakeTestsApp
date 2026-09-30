@@ -1,0 +1,60 @@
+from django.db import transaction
+
+from ..models.tag import Tag
+from ..models.test import Test
+from ..permissions import check_test_author, check_test_not_published
+from ..query_selectors.tag import tag_get_by_id
+
+from ..validators import tag as test_validators
+
+from apps.users.models import User
+
+
+@transaction.atomic
+def add_tag(
+    *,
+    test: Test,
+    user: User,
+    tag_id: int,
+) -> Tag:
+    test.refresh_from_db(
+        from_queryset=Test.objects.select_for_update(),
+    )
+
+    check_test_author(test=test, user=user)
+    check_test_not_published(test=test)
+
+    test_validators.validate_tag_limit(test=test)
+    test_validators.validate_tag_exists(
+        test=test,
+        tag_id=tag_id
+    )
+
+    tag = tag_get_by_id(tag_id=tag_id)
+
+    test.tags.add(tag)
+
+    return tag
+
+
+def remove_tag(
+    *,
+    test: Test,
+    user: User,
+    tag_id: int,
+) -> Tag:
+
+    check_test_author(test=test, user=user)
+    check_test_not_published(test=test)
+
+    test_validators.validate_tag_not_exists(
+        test=test,
+        tag_id=tag_id,
+    )
+
+    tag = tag_get_by_id(tag_id=tag_id)
+
+    test.tags.remove(tag)
+
+    return tag
+

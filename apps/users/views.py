@@ -1,3 +1,63 @@
-from django.shortcuts import render
+from django.contrib.auth.views import LogoutView, LoginView, PasswordChangeView, PasswordChangeDoneView
+from django.urls import reverse_lazy
+from django.views.generic import FormView, ListView
+
+from .forms import RegisterUserForm, LoginUserForm, UserPasswordChangeForm
+from .mixins import ProfileTestsMixin
+from .services import register_user
+
+from apps.tests.query_selectors import test as test_selector
 
 
+class RegisterUser(FormView):
+    form_class = RegisterUserForm
+    template_name = 'users/registration.html'
+    success_url = reverse_lazy('pages:home')
+
+    def form_valid(self, form):
+        register_user(self.request, form)
+        return super().form_valid(form)
+
+
+class LoginUser(LoginView):
+    form_class = LoginUserForm
+    template_name = 'users/login.html'
+
+    def get_success_url(self):
+        return reverse_lazy('pages:home')
+
+
+class LogoutUser(LogoutView):
+    next_page = 'users:login'
+
+
+class ProfileUser(ProfileTestsMixin, ListView):
+    template_name = "users/profile.html"
+    context_object_name = 'tests'
+
+    def get_queryset(self):
+        return test_selector.get_for_profile(
+            user=self.profile_user,
+            viewer=self.request.user
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        request_user = self.request.user
+        profile_user = self.profile_user
+        context['profile_user'] = profile_user
+        context['profile_owner'] = (
+                request_user.is_authenticated and
+                request_user.pk == profile_user.pk
+        )
+        return context
+
+
+class UserPasswordChange(PasswordChangeView):
+    form_class = UserPasswordChangeForm
+    success_url = reverse_lazy('users:password_change_done')
+    template_name = 'users/password_change.html'
+
+
+class PasswordChangeDone(PasswordChangeDoneView):
+    template_name = 'users/password_change_done.html'

@@ -4,7 +4,7 @@ from pathlib import Path
 import environ
 import certifi
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
                   DEBUG=(bool, False),
@@ -47,6 +47,7 @@ AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME")
 AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = 'all'
 AWS_QUERYSTRING_AUTH = True
+AWS_QUERYSTRING_EXPIRE = 86400
 
 AWS_S3_ADDRESSING_STYLE = "virtual"
 AWS_S3_SIGNATURE_VERSION = "s3v4"
@@ -61,10 +62,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'debug_toolbar',
-    'core.apps.tests.apps.TestsConfig',
-    'core.apps.users.apps.UsersConfig',
-    'core.services',
-    'storages',
+    'apps.tests.apps.TestsConfig',
+    'apps.users.apps.UsersConfig',
+    'services',
 ]
 
 MIDDLEWARE = [
@@ -78,7 +78,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
-ROOT_URLCONF = 'core.project.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -91,13 +91,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.services.context_processors.common_context',
+                'services.context_processors.common_context',
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'core.project.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 DATABASES = {

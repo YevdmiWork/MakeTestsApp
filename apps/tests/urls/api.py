@@ -1,0 +1,86 @@
+from django.urls import path
+
+from ..views import api
+
+app_name = 'api'
+
+urlpatterns = [
+    path(
+        'test/<int:test_id>/update',
+        api.update_test_info,
+        name='update_test',
+    ),
+    path(
+        'test/<int:test_id>/publish/',
+        api.publish_test,
+        name='publish_test'
+    ),
+    path(
+        'test/<int:test_id>/unpublish/',
+        api.unpublish_test,
+        name='unpublish_test'
+    ),
+
+    path(
+        'tag/<int:test_id>/add/',
+        api.add_tag,
+        name='add_tag',
+    ),
+    path(
+        'tag/<int:test_id>/remove/',
+        api.remove_tag,
+        name='remove_tag',
+    ),
+
+    path(
+        'question/<int:test_id>/add/',
+        api.add_question,
+        name='add_question',
+    ),
+    path(
+        'question/<int:question_id>/delete/',
+        api.delete_question,
+        name='delete_question'
+    ),
+    path(
+        'question/<int:question_id>/text/update/',
+        api.update_question_text,
+        name='update_question_text'
+    ),
+    path(
+        'question/<int:question_id>/type/update/',
+        api.update_question_type,
+        name='update_question_type',
+    ),
+    path(
+        'question/<int:question_id>/image/upload/',
+        api.upload_question_image,
+        name="upload_question_image",
+    ),
+    path(
+        'question/<int:question_id>/image/delete/',
+        api.delete_question_image,
+        name="delete_question_image",
+    ),
+
+    path(
+        'answer/<int:question_id>/add/',
+        api.add_answer,
+        name='add_answer',
+    ),
+    path(
+        'answer/<int:answer_id>/delete/',
+        api.delete_answer,
+        name='delete_answer'
+    ),
+    path(
+        'answer_text/<int:answer_id>/update/',
+        api.update_answer_text,
+        name='update_answer_text',
+    ),
+    path(
+        'answer_flag/<int:answer_id>/update/',
+        api.update_answer_flag,
+        name='update_answer_flag',
+    ),
+]

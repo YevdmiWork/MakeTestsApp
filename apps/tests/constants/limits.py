@@ -1,0 +1,47 @@
+class TestLimits:
+    TITLE_MAX_LENGTH = 50
+    TITLE_MIN_LENGTH = 5
+    CONTENT_MAX_LENGTH = 1500
+    SLUG_MAX_LENGTH = 32
+    STATUS_MAX_LENGTH = 30
+
+    MAX_TESTS_FOR_USER = 10
+    MAX_TEST_TAGS = 4
+    SIMILAR_TESTS_LIMIT = 4
+
+
+class TagLimits:
+    MAX_TITLE = 24
+
+
+class RatingLimits:
+    MIN_VALUE = 0
+    MAX_VALUE = 5
+
+
+class QuestionLimits:
+    TITLE_MAX_LENGTH = 350
+
+    MAX_QUESTIONS = 10
+    MIN_QUESTIONS_FOR_PUBLISH = 4
+
+    MIN_ANSWERS_COUNT = 2
+    MIN_CORRECT_ANSWERS_COUNT = 1
+
+    TF_MIN_ANSWERS_COUNT = 1
+    SC_CORRECT_ANSWERS_COUNT = 1
+
+    MAX_IMAGE_SIZE = 20 * 1024 * 1024
+    MAX_IMAGE_WIDTH = 1920
+    MAX_IMAGE_HEIGHT = 1080
+
+    ALLOWED_IMAGE_FORMATS = {
+        'JPEG',
+        'PNG',
+        'WEBP',
+    }
+
+
+class AnswerLimits:
+    MAX_TITLE_LENGTH = 299
+    MAX_ANSWERS = 10
