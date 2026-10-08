@@ -43,19 +43,25 @@ class PublishValidationError(AppError):
             }
         )
 
+
 class BadRequestError(AppError):
     code = 'bad_request'
     status_code = 400
 
 
-class NotFoundError(AppError):
-    code = 'not_found'
-    status_code = 404
+class AuthenticationError(AppError):
+    code = 'authentication_required'
+    status_code = 401
 
 
 class AccessDeniedError(AppError):
     code = 'access_denied'
     status_code = 403
+
+
+class NotFoundError(AppError):
+    code = 'not_found'
+    status_code = 404
 
 
 class ConflictError(AppError):
