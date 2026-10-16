@@ -126,6 +126,29 @@ def get_similar(test, limit=TestLimits.SIMILAR_TESTS_LIMIT):
     return qs
 
 
+def get_for_run():
+    qs = (
+        Test.objects
+        .published()
+        .select_related('author')
+        .prefetch_related('tags')
+        .only(
+            'id',
+            'title',
+            'slug',
+            'completion',
+            'rating_avg',
+            'time_update',
+            'rating_count',
+            'status',
+            'content',
+            'author_id',
+            'author__username'
+        )
+    )
+    return qs
+
+
 def get_test_or_404(
     *,
     test_id: int,

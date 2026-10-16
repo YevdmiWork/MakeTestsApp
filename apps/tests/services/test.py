@@ -1,12 +1,18 @@
 import uuid
+from typing import Any
+
 from django.db import transaction
 
 from ..models.choices import TestStatus
+from ..models.question import Question
+from ..models.result import TestResult
 from ..models.test import Test
 from ..permissions import check_test_author, check_test_not_published
 
 from ..validators import test as test_validators
+from ..validators import answer as answer_validators
 from ..constants import limits as const
+from ..query_selectors import question as question_selector
 
 from apps.users.models import User
 
@@ -107,4 +113,111 @@ def unpublish_test(
     test.status = TestStatus.UNPUBLISHED
     test.save(update_fields=['status', 'time_update'])
 
+    return test
+
+
+@transaction.atomic
+def complete_test(
+    *,
+    test: Test,
+    user: User | None,
+    answers: dict,
+) -> TestResult:
+    test = Test.objects.select_for_update().get(pk=test.pk)
+
+    questions = list(
+        question_selector.get_for_result(test=test)
+    )
+
+    answers = answer_validators.validate_answers(
+        questions=questions,
+        answers=answers,
+    )
+
+    correct_answers = calculate_result(
+        questions=questions,
+        answers=answers,
+    )
+
+    result = save_result(
+        test=test,
+        user=user,
+        correct_answers=correct_answers,
+        total_questions=len(questions),
+    )
+
+    increment_completion(test=test)
+
+    return result
+
+
+def calculate_result(
+    *,
+    questions: list[Question],
+    answers: dict[str, Any],
+) -> int:
+    return sum(
+        is_correct_answer(
+            question=question,
+            selected=answers[str(question.id)],
+        )
+        for question in questions
+    )
+
+
+def is_correct_answer(
+    *,
+    question: Question,
+    selected: Any,
+) -> bool:
+    correct_answers = list(question.answers.all())
+
+    if question.type == Question.QuestionType.SINGLE_CHOICE:
+        return any(
+            answer.id == selected and answer.flag
+            for answer in correct_answers
+        )
+
+    if question.type == Question.QuestionType.MULTIPLE_CHOICES:
+        correct_ids = {
+            answer.id
+            for answer in correct_answers
+            if answer.flag
+        }
+        return set(selected) == correct_ids
+
+    if question.type == Question.QuestionType.TEXT_FIELD:
+        correct_texts = {
+            answer.text.strip().casefold()
+            for answer in correct_answers
+            if answer.flag is not None
+        }
+        return selected.strip().casefold() in correct_texts
+
+    return False
+
+
+def save_result(
+    *,
+    test: Test,
+    user: User | None,
+    correct_answers: int,
+    total_questions: int,
+) -> TestResult:
+    return TestResult.objects.create(
+        test=test,
+        user=user if user and user.is_authenticated else None,
+        correct_answers=correct_answers,
+        total_questions=total_questions,
+    )
+
+
+def increment_completion(*, test: Test) -> Test:
+    test.completion += 1
+    test.save(
+        update_fields=[
+            'completion',
+            'time_update',
+        ],
+    )
     return test
