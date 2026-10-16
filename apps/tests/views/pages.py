@@ -4,22 +4,25 @@ from django.views.generic import ListView, CreateView, DetailView
 
 from ..constants.limits import TestLimits
 from ..constants.search import SEARCH_PARAM
-from ..exceptions import AppValidationError, AppError
-from ..forms import AddTestForm, QuestionForm, AnswerCreateForm, TestTitleForm, TestContentForm
+from ..exceptions import AppValidationError
+from ..forms import AddTestForm, QuestionForm, AnswerCreateForm, TestTitleForm, TestContentForm, PostAnswersForm
 from ..mixins import PublishedTestMixin
 from ..models.question import Question
 from ..models.tag import Tag
 from ..models.test import Test
 
 from ..query_selectors import test as test_selector
+from ..query_selectors import question as question_selector
 from ..services import test as test_services
 
 
 class AllTests(ListView):
     template_name = 'tests/tests_all.html'
     context_object_name = 'tests'
+
     sort_param = 'sort_by'
     default_sort = 'popular'
+
     sort_map = {
         'newest': '-time_update',
         'oldest': 'time_update',
@@ -38,7 +41,7 @@ class AllTests(ListView):
         return qs.order_by(sort)
 
     def apply_search(self, qs):
-        query = (self.request.GET.get(SEARCH_PARAM) or '').strip()
+        query = self.request.GET.get(SEARCH_PARAM, '').strip()
         if query:
             qs = qs.search(query)
         return qs
@@ -105,3 +108,49 @@ class TestPreview(PublishedTestMixin, BaseTestView):
         context = super().get_context_data(**kwargs)
         context['similar_tests'] = test_selector.get_similar(test=self.object)
         return context
+
+
+class TestRun(BaseTestView):
+    template_name = 'tests/test_run.html'
+    form_class = PostAnswersForm
+
+    def get_queryset(self):
+        return test_selector.get_for_run()
+
+    def get(self, request, *args, **kwargs):
+        test = self.get_object()
+        questions = list(
+            question_selector.get_for_result(test=test)
+        )
+        form = self.form_class(questions=questions)
+
+        return self.render_to_response({
+            'test': test,
+            'question_fields': zip(questions, form),
+        })
+
+    def post(self, request, *args, **kwargs):
+        test = self.get_object()
+        questions = list(
+            question_selector.get_for_result(test=test)
+        )
+        form = self.form_class(
+            request.POST,
+            questions=questions,
+        )
+
+        if form.is_valid():
+            result = test_services.complete_test(
+                test=test,
+                user=request.user,
+                answers=form.cleaned_data,
+            )
+            return redirect(
+                'pages:result',
+                uuid=result.uuid_slug,
+            )
+
+        return self.render_to_response({
+            'test': test,
+            'question_fields': zip(questions, form),
+        })

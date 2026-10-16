@@ -1,0 +1,68 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet"
+          href="{% static 'tests/css/test_run.css' %}">
+{% endblock %}
+{% block content %}
+<div class="test-run">
+    <div class="test-run__test-info">
+        <div class="test-run__test-title">
+            {{ test.title }}
+        </div>
+        <span>
+            {{ test.content }}
+        </span>
+<div class="test-run__test-tags">
+    {% for tag in test.tags.all %}
+        {% if forloop.first %}
+            Теги:
+        {% endif %}
+
+        <div class="test-run__tag-block">
+            {{ tag.name }}
+        </div>
+    {% empty %}
+        Тегов нет
+    {% endfor %}
+</div>
+        <div class="test-run__back-link-btn">
+            <a class="test-run__back-link" href="{{ test.get_preview_url }}">
+                Вернуться к тесту
+            </a>
+        </div>
+    </div>
+    <div class="test-run__questions-list">
+        <div class="test-run-container">
+        <form method="post">
+            {% csrf_token %}
+            {% for question, field in question_fields %}
+                <div class="test-run__question-block">
+                    <div class="test-run__question-title">
+                        <strong>
+                            Вопрос {{ forloop.counter }}: {{ question.text }}
+                        </strong>
+                    </div>
+                    {% if question.image %}
+                    <div class="test__question-image-container">
+                        <img class="test__question-image"
+                             src="{{ question.image.url }}"
+                             alt="Изображение к вопросу">
+                    </div>
+                    {% endif %}
+                    <div class="test-run__answers-block">
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="test-run__complete-test">
+                <button type="submit"
+                        class="test-run__complete-test-btn">
+                    Завершить тест
+                </button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends 'tests/base.html' %}
+{% load static %}
+{% block static %}
+    <link rel="stylesheet"
+          href="{% static 'tests/css/test_result.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="test-result">
+        <div class="test-result__block">
+            <span class="test-result__block-title">
+                Результат
+            </span>
+            <div class="test-result__review-answers">
+                <span>
+                    Тест:
+                    {{result.test}}
+                </span>
+                <span>
+                    Автор:
+                    {{result.test.author}}
+                </span>
+                <span>
+                    Общее кол-во вопросов в тесте:
+                    {{result.total_questions}}
+                </span>
+                <span>
+                    Верных ответов было дано:
+                    {{result.correct_answers}}
+                </span>
+                <span>
+                    Страница доступна {{access_time_minutes}} минут.
+                </span>
+                <div class="test-result__rate-test-block">
+                    {% if user.is_authenticated %}
+                    <form
+                          method="POST"
+                          class="test-result__rating-form">
+                        {% csrf_token %}
+                        <div class="test-result__stars">
+                            <input type="radio"
+                                   id="star5"
+                                   name="rating"
+                                   value="5">
+                            <label for="star5"
+                                   title="Отлично">
+                               ★
+                            </label>
+                            <input type="radio"
+                                   id="star4"
+                                   name="rating"
+                                   value="4">
+                            <label for="star4"
+                                   title="Хорошо">
+                                ★
+                            </label>
+                            <input type="radio"
+                                   id="star3"
+                                   name="rating"
+                                   value="3">
+                            <label for="star3"
+                                   title="Удовлетворительно">
+                                ★
+                            </label>
+                            <input type="radio"
+                                   id="star2"
+                                   name="rating"
+                                   value="2">
+                            <label for="star2"
+                                   title="Плохо">
+                                ★
+                            </label>
+                            <input type="radio"
+                                   id="star1"
+                                   name="rating"
+                                   value="1">
+                            <label for="star1"
+                                   title="Ужасно">
+                                ★
+                            </label>
+                        </div>
+                        <button type="submit"
+                                class="test-result__rating-submit">
+                            Оценить
+                        </button>
+                    </form>
+                    {% else %}
+                        <span>
+                            Для оценки теста требуется
+                            <a class="test-result__login-link"
+                               href="{% url 'users:login' %}">
+                            авторизация
+                            </a>
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="test-result__back-link-container">
+                <a href="{% url 'pages:home' %}"
+                   class="test-result__back-link">
+                    Вернуться к тестам
+                </a>
+            </div>
+        </div>
+        <div class="test-result__suggested-tests">
+            <div class="test-result__suggested-tests-header">
+                <span>
+                    Другие тесты
+                </span>
+            </div>
+            {% if similar_tests %}
+                <div class="test-result__similar-tests-list">
+                    {% for test in similar_tests %}
+                        <div class="test-result__similar-test-block">
+                            <a class="test-result__similar-test-title"
+                               href="{{ test.get_absolute_url }}">
+                                {{ test.title }}
+                            </a>
+                            <div class="test-result__similar-test-tags">
+                                {% for tag in test.tag.all %}
+                                    <div class="test-result__similar-test-tag-block">
+                                        <span class="test-result__similar-test-tag-span">
+                                            {{ tag.name }}
+                                        </span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="test-result__similar-test-info">
+                                <span class="test-result__icon-views">
+                                    {{ test.completion }}
+                                </span>
+                                <span class="test-result__icon-star">
+                                    {{ test.rating_avg }}
+                                </span>
+                                <span>
+                                    {{ test.author.username }}
+                                </span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <span class="test-result__similar-tests-empty-span">
+                    Нет похожих тестов
+                </span>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

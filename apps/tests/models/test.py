@@ -96,6 +96,9 @@ class Test(models.Model):
     def get_edit_url(self):
         return reverse('pages:edit', kwargs={'test_slug': self.slug})
 
+    def get_run_url(self):
+        return reverse('pages:run', kwargs={'test_slug': self.slug})
+
     class Meta:
         ordering = ['-completion']
         indexes = [

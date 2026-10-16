@@ -26,6 +26,8 @@ class AnswerMessages:
     ALREADY_EXISTS = 'Новый ответ дублируется'
     ANSWER_LIMIT = 'Лимит ответов'
     EMPTY_TEXT = 'Пустой ответ'
+    WRONG_ID = 'Id ответов не совпадают'
+    WRONG_TYPE = 'Неправильный тип вопроса'
 
 
 class UserMessages:
